@@ -12,9 +12,7 @@ class CreateInvoiceResponse implements ResponseInterface
 
     private $htmlUrl;
 
-    private $isOk;
-
-    private $errorMessage;
+    private $errorMessage = false;
 
     public function __construct(Result $transportResult)
     {
@@ -29,7 +27,6 @@ class CreateInvoiceResponse implements ResponseInterface
         }
 
         if ($result['status'] != 'ok') {
-            $this->isOk = false;
             $this->errorMessage = $result['message'];
             return;
         }
@@ -41,7 +38,7 @@ class CreateInvoiceResponse implements ResponseInterface
 
     public function isOk()
     {
-        return $this->isOk;
+        return $this->errorMessage === false;
     }
 
     public function getErrorMessage()
