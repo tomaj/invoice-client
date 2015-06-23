@@ -29,6 +29,7 @@ class InvoiceApi
     public function __construct($apiToken, $options = [])
     {
         $this->apiToken = $apiToken;
+        $this->target = self::DEFAULT_TARGET;
 
         $debug = false;
         if (array_key_exists('debug', $options)) {
