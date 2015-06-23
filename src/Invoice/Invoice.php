@@ -51,6 +51,9 @@ class Invoice
 
     private $items = [];
 
+    /** @var  Discount */
+    private $discount;
+
     /**
      * @param array $data
      * @return Invoice
@@ -110,6 +113,9 @@ class Invoice
             foreach ($data['items'] as $item) {
                 $invoice->addItem(InvoiceItem::fromArray($item));
             }
+        }
+        if (isset($data['discount']) && is_array($data['discount'])) {
+            $invoice->setDiscount(Discount::fromArray($data['discount']));
         }
 
         return $invoice;
@@ -408,6 +414,28 @@ class Invoice
     public function addItem(InvoiceItem $invoiceItem)
     {
         $this->items[] = $invoiceItem;
+        return $this;
+    }
+
+    /**
+     * @return Discount
+     */
+    public function getDiscount()
+    {
+        return $this->discount;
+    }
+
+    /**
+     * @param Discount $discount
+     * @return Invoice
+     * @throws \Exception
+     */
+    public function setDiscount($discount)
+    {
+        if ($discount->getType() == 'flat') {
+            throw new \Exception('Flat discount is unsupported for invoice. Add new item with negative price for flat discount.');
+        }
+        $this->discount = $discount;
         return $this;
     }
 }

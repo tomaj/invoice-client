@@ -16,7 +16,7 @@ class InvoiceItem
 
     private $description;
 
-//	private $discount;
+    private $discount;
 
     public static function fromArray($data)
     {
@@ -38,6 +38,9 @@ class InvoiceItem
         }
         if (isset($data['description'])) {
             $item->setPriceTotal($data['description']);
+        }
+        if (isset($data['discount']) && is_array($data['discount'])) {
+            $item->setDiscount(Discount::fromArray($data['discount']));
         }
         return $item;
     }
@@ -150,21 +153,21 @@ class InvoiceItem
         return $this;
     }
 
-//    /**
-//     * @return Discount
-//     */
-//    public function getDiscount()
-//    {
-//        return $this->discount;
-//    }
-//
-//    /**
-//     * @param Discount $discount
-//     * @return InvoiceItem
-//     */
-//    public function setDiscount($discount)
-//    {
-//        $this->discount = $discount;
-//        return $this;
-//    }
+    /**
+     * @return Discount
+     */
+    public function getDiscount()
+    {
+        return $this->discount;
+    }
+
+    /**
+     * @param Discount $discount
+     * @return InvoiceItem
+     */
+    public function setDiscount($discount)
+    {
+        $this->discount = $discount;
+        return $this;
+    }
 }

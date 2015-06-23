@@ -27,6 +27,12 @@ class Serializer
         if ($invoice->getShippingAddress()) {
             $data['shipping_address'] = $this->encodeAddress($invoice->getShippingAddress());
         }
+        if ($invoice->getDiscount() && $invoice->getDiscount()->getType() != 'none') {
+            $data['discount'] = [
+                'type' => $invoice->getDiscount()->getType(),
+                'value' => $invoice->getDiscount()->getValue(),
+            ];
+        }
         return json_encode(['invoice' => $data]);
     }
 
@@ -61,7 +67,7 @@ class Serializer
     {
         $result = [];
         foreach ($items as $item) {
-            $result[] = [
+            $row = [
                 'vat' => $item->getVat(),
                 'quantity' => $item->getQuantity(),
                 'description' => $item->getDescription(),
@@ -69,6 +75,13 @@ class Serializer
                 'price' => $item->getPrice(),
                 'price_total' => $item->getPriceTotal(),
             ];
+            if ($item->getDiscount() && $item->getDiscount()->getType() != 'none') {
+                $row['discount'] = [
+                    'type' => $item->getDiscount()->getType(),
+                    'value' => $item->getDiscount()->getValue(),
+                ];
+            }
+            $result[] = $row;
         }
         return $result;
     }

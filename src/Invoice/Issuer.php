@@ -11,6 +11,7 @@ class Issuer
     public static function fromArray(array $data)
     {
         $issuer = new Issuer;
+        // todo
         return $issuer;
     }
 }
