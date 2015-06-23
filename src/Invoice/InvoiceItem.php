@@ -14,6 +14,8 @@ class InvoiceItem
 
     private $priceTotal;
 
+    private $description;
+
 //	private $discount;
 
     public static function fromArray($data)
@@ -33,6 +35,9 @@ class InvoiceItem
         }
         if (isset($data['price_total'])) {
             $item->setPriceTotal($data['price_total']);
+        }
+        if (isset($data['description'])) {
+            $item->setPriceTotal($data['description']);
         }
         return $item;
     }
@@ -124,6 +129,24 @@ class InvoiceItem
     public function setPriceTotal($priceTotal)
     {
         $this->priceTotal = $priceTotal;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     * @return InvoiceItem
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
         return $this;
     }
 

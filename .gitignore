@@ -2,3 +2,4 @@ vendor
 composer.lock
 .idea
 *.swp
+.DS_Store
