@@ -1,5 +1,5 @@
 {
-  "name": "tomaj/invoice",
+  "name": "tomaj/invoice-client",
   "description": "Invoice client",
   "type": "library",
   "license": "LGPL",
