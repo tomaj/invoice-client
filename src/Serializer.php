@@ -4,7 +4,7 @@ namespace Invoice;
 
 class Serializer
 {
-	public function encodeInvoice(Invoice $invoice)
+    public function encodeInvoice(Invoice $invoice)
     {
         $data = [
             'id' => $invoice->getId(),

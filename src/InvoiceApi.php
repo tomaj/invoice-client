@@ -8,13 +8,13 @@ use Invoice\Transport\TransportInterface;
 
 class InvoiceApi
 {
-	private $apiToken;
+    private $apiToken;
 
-	private $target;
+    private $target;
 
-	const DEFAULT_TARGET = 'https://chcemfakturu.sk';
+    const DEFAULT_TARGET = 'https://chcemfakturu.sk';
 
-	/**
+    /**
      *
      * @param string $apiToken   your API token
      * @param array  $options An array of options (since PHP does not support named arguments):
@@ -26,11 +26,11 @@ class InvoiceApi
      *                        'logger' => PSR-3 logger (a Psr\Log\LoggerInterface instance)
      * @throws Exception if an error is encountered and debug option is true
      */
-	public function __construct($apiToken, $options = [])
-	{
-		$this->apiToken = $apiToken;
+    public function __construct($apiToken, $options = [])
+    {
+        $this->apiToken = $apiToken;
 
-		$debug = false;
+        $debug = false;
         if (array_key_exists('debug', $options)) {
             if ($options['debug']) {
                 $debug = true;
@@ -68,21 +68,21 @@ class InvoiceApi
 
         if ($target !== null) {
             if (!is_string($target)) {
-            	throw new Exception('Target must be string or not specified');
+                throw new Exception('Target must be string or not specified');
             }
             if (substr($target, 0, 7) !== 'http://' && substr($target, 0, 8) !== 'https://') {
                 throw new Exception('Target must be start with http:// or https://');
             }
             $this->target = rtrim($target, '/');
         }
-	}
+    }
 
     /**
      * @param Invoice $invoice
      * @return CreateInvoiceResponse
      */
-	public function createInvoice(Invoice $invoice)
-	{
+    public function createInvoice(Invoice $invoice)
+    {
         $serializer = new Serializer();
         $payload = $serializer->encodeInvoice($invoice);
 
@@ -91,28 +91,28 @@ class InvoiceApi
         $createInvoiceResponse = new CreateInvoiceResponse($response);
 
         return $createInvoiceResponse;
-	}
+    }
 
 //	public function updateInvoice($id, Invoice $invoice)
 //	{
 //        // todo
 //	}
 
-	public function deleteInvoice($id)
-	{
+    public function deleteInvoice($id)
+    {
         $result = $this->transport->call($this->target . '/api/v1/invoices/delete/' . $id, $this->apiToken, null, 'delete');
 
         return $result;
-	}
+    }
 
-	public function getInvoice($id)
-	{
+    public function getInvoice($id)
+    {
         $result = $this->transport->call($this->target . '/api/v1/invoices/detail/' . $id, $this->apiToken, null, 'get');
 
         // todo spracuj
 
         return $result;
-	}
+    }
 
 //	public function loadInvoices()
 //	{

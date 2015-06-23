@@ -8,4 +8,3 @@ interface ResponseInterface
 
     public function getErrorMessage();
 }
-

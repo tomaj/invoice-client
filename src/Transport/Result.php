@@ -23,5 +23,4 @@ class Result
     {
         return $this->body;
     }
-
 }

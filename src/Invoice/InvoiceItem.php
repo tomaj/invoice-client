@@ -4,21 +4,21 @@ namespace Invoice;
 
 class InvoiceItem
 {
-	private $quantity;
+    private $quantity;
 
-	private $vat;
+    private $vat;
 
-	private $priceItem;
+    private $priceItem;
 
-	private $price;
+    private $price;
 
-	private $priceTotal;
+    private $priceTotal;
 
 //	private $discount;
 
-	public static function fromArray($data)
-	{
-		$item = new InvoiceItem();
+    public static function fromArray($data)
+    {
+        $item = new InvoiceItem();
         if (isset($data['quantity'])) {
             $item->setQuantity($data['quantity']);
         }
@@ -34,8 +34,8 @@ class InvoiceItem
         if (isset($data['price_total'])) {
             $item->setPriceTotal($data['price_total']);
         }
-		return $item;
-	}
+        return $item;
+    }
 
     /**
      * @return int
