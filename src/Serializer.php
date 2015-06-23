@@ -27,7 +27,7 @@ class Serializer
         if ($invoice->getShippingAddress()) {
             $data['shipping_address'] = $this->encodeAddress($invoice->getShippingAddress());
         }
-        return json_encode($data);
+        return json_encode(['invoice' => $data]);
     }
 
     public function encodeClient(Client $client)

@@ -31,6 +31,7 @@ class CreateInvoiceResponse implements ResponseInterface
         if ($result['status'] != 'ok') {
             $this->isOk = false;
             $this->errorMessage = $result['message'];
+            return;
         }
 
         $this->htmlUrl = $result['html_url'];
