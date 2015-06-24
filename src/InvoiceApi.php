@@ -94,6 +94,21 @@ class InvoiceApi
         return $createInvoiceResponse;
     }
 
+    public function htmlUrl($id)
+    {
+        return $this->target . '/html/' . $id;
+    }
+
+    public function pdfUrl($id)
+    {
+        return $this->target . '/pdf/' . $id;
+    }
+
+    public function pdfDownloadUrl($id)
+    {
+        return $this->target . '/pdf-download/' . $id;
+    }
+
 //	public function updateInvoice($id, Invoice $invoice)
 //	{
 //        // todo
