@@ -18,6 +18,8 @@ class Address
 
     private $country;
 
+    private $state;
+
     public static function fromArray($data)
     {
         $address = new Address();
@@ -32,6 +34,9 @@ class Address
         }
         if (isset($data['country'])) {
             $address->setCountry($data['country']);
+        }
+        if (isset($data['state'])) {
+            $address->setState($data['state']);
         }
         if (isset($data['tel'])) {
             $address->setTel($data['tel']);
@@ -168,6 +173,24 @@ class Address
     public function setCountry($country)
     {
         $this->country = $country;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * @param string $state
+     * @return Address
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
         return $this;
     }
 }

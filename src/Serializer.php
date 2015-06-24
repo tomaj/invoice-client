@@ -57,6 +57,7 @@ class Serializer
             'zip' => $address->getZip(),
             'city' => $address->getCity(),
             'country' => $address->getCountry(),
+            'state' => $address->getState(),
             'email' => $address->getEmail(),
             'tel' => $address->getTel(),
             'fax' => $address->getZip(),
