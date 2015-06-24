@@ -92,7 +92,7 @@ class Client
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function getVat()
     {
@@ -100,7 +100,7 @@ class Client
     }
 
     /**
-     * @param float $vat
+     * @param string $vat
      * @return Client
      */
     public function setVat($vat)
@@ -110,7 +110,7 @@ class Client
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function getLocalVat()
     {
@@ -118,7 +118,7 @@ class Client
     }
 
     /**
-     * @param float $localVat
+     * @param string $localVat
      * @return Client
      */
     public function setLocalVat($localVat)
