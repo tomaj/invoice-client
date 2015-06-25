@@ -16,6 +16,7 @@ class InvoiceTest extends PHPUnit_Framework_TestCase
             'delivered' => '13.5.2015',
             'due' => '29.5.2015',
             'status' => 'paid',
+            'currency' => Currency::CZK,
             'shipping_address' => [
                 'email' => 'asfsaf@asdsad.sk',
             ],
@@ -44,6 +45,7 @@ class InvoiceTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('13.5.2015', $invoice->getDelivered());
         $this->assertEquals('29.5.2015', $invoice->getDue());
         $this->assertEquals('paid', $invoice->getStatus());
+        $this->assertEquals('CZK', $invoice->getCurrency());
 
         $this->assertEquals('asfsaf@asdsad.sk', $invoice->getShippingAddress()->getEmail());
 
@@ -56,5 +58,19 @@ class InvoiceTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(14, $items[0]->getPriceItem());
         $this->assertEquals(4, $items[1]->getQuantity());
         $this->assertEquals(2, $items[1]->getPriceItem());
+    }
+
+    /**
+     * @expectedException \Invoice\Exception\UnsupportedCurrencyException
+     */
+    public function testUnsupportedCurrency()
+    {
+        Invoice::fromArray([
+            'id' => 'asfd09iu23oiht3209itgh4eio3ht',
+            'created' => '14.5.2015',
+            'delivered' => '13.5.2015',
+            'due' => '29.5.2015',
+            'currency' => 'asdq3r3'
+        ]);
     }
 }

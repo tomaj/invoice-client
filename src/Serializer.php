@@ -20,6 +20,7 @@ class Serializer
             'items' => $this->encodeItems($invoice->getItems()),
             'price' => $invoice->getPrice(),
             'price_total' => $invoice->getPriceTotal(),
+            'currency' => $invoice->getCurrency(),
         ];
         if ($invoice->getClient()) {
             $data['client'] = $this->encodeClient($invoice->getClient());
@@ -39,10 +40,11 @@ class Serializer
     public function encodeClient(Client $client)
     {
         $data = [
-            'identifier' => $client->getIdentifier(),
             'name' => $client->getName(),
             'company' => $client->getCompany(),
-            'vat' => $client->getVat(),
+            'identifier' => $client->getIdentifier(),
+            'vat_number' => $client->getVatNumber(),
+            'tax_number' => $client->getTaxNumber(),
         ];
         if ($client->getAddress()) {
             $data['address'] = $this->encodeAddress($client->getAddress());
@@ -54,6 +56,7 @@ class Serializer
     {
         return [
             'street' => $address->getStreet(),
+            'street2' => $address->getStreet2(),
             'zip' => $address->getZip(),
             'city' => $address->getCity(),
             'country' => $address->getCountry(),

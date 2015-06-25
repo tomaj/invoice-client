@@ -6,6 +6,8 @@ class Address
 {
     private $street;
 
+    private $street2;
+
     private $zip;
 
     private $email;
@@ -25,6 +27,9 @@ class Address
         $address = new Address();
         if (isset($data['street'])) {
             $address->setStreet($data['street']);
+        }
+        if (isset($data['street2'])) {
+            $address->setStreet2($data['street2']);
         }
         if (isset($data['zip'])) {
             $address->setZip($data['zip']);
@@ -65,6 +70,24 @@ class Address
     public function setStreet($street)
     {
         $this->street = $street;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStreet2()
+    {
+        return $this->street2;
+    }
+
+    /**
+     * @param string $street2
+     * @return Address
+     */
+    public function setStreet2($street2)
+    {
+        $this->street2 = $street2;
         return $this;
     }
 

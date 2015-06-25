@@ -10,9 +10,9 @@ class Client
 
     private $identifier;
 
-    private $vat;
+    private $vatNumber;
 
-    private $localVat;
+    private $taxNumber;
 
     private $address;
 
@@ -25,11 +25,11 @@ class Client
         if (isset($data['company'])) {
             $client->setCompany($data['company']);
         }
-        if (isset($data['vat'])) {
-            $client->setVat($data['vat']);
+        if (isset($data['vat_number'])) {
+            $client->setVatNumber($data['vat_number']);
         }
-        if (isset($data['local_vat'])) {
-            $client->setLocalVat($data['local_vat']);
+        if (isset($data['tax_number'])) {
+            $client->setTaxNumber($data['tax_number']);
         }
         if (isset($data['address'])) {
             $client->setAddress(Address::fromArray($data['address']));
@@ -94,36 +94,36 @@ class Client
     /**
      * @return string
      */
-    public function getVat()
+    public function getVatNumber()
     {
-        return $this->vat;
+        return $this->vatNumber;
     }
 
     /**
-     * @param string $vat
+     * @param string $vatNumber
      * @return Client
      */
-    public function setVat($vat)
+    public function setVatNumber($vatNumber)
     {
-        $this->vat = $vat;
+        $this->vatNumber = $vatNumber;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getLocalVat()
+    public function getTaxNumber()
     {
-        return $this->localVat;
+        return $this->taxNumber;
     }
 
     /**
-     * @param string $localVat
+     * @param string $taxNumber
      * @return Client
      */
-    public function setLocalVat($localVat)
+    public function setTaxNumber($taxNumber)
     {
-        $this->localVat = $localVat;
+        $this->taxNumber = $taxNumber;
         return $this;
     }
 

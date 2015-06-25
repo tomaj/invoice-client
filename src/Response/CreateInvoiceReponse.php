@@ -33,7 +33,7 @@ class CreateInvoiceResponse implements ResponseInterface
 
         $this->htmlUrl = $result['html_url'];
         $this->downloadPdfUrl = $result['download_pdf_url'];
-        $this->id = $result['invoice_id'];
+        $this->id = $result['id'];
     }
 
     public function isOk()

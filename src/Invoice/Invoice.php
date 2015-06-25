@@ -2,6 +2,8 @@
 
 namespace Invoice;
 
+use Invoice\Exception\UnsupportedCurrencyException;
+
 class Invoice
 {
     /** @var string */
@@ -49,6 +51,9 @@ class Invoice
     /** @var float */
     private $priceTotal;
 
+    /** @var  string */
+    private $currency;
+
     private $items = [];
 
     /** @var  Discount */
@@ -57,6 +62,7 @@ class Invoice
     /**
      * @param array $data
      * @return Invoice
+     * @throws UnsupportedCurrencyException
      */
     public static function fromArray(array $data)
     {
@@ -108,6 +114,12 @@ class Invoice
         }
         if (isset($data['price_total'])) {
             $invoice->setPriceTotal($data['price_total']);
+        }
+        if (isset($data['currency'])) {
+            if (!Currency::isValid($data['currency'])) {
+                throw new UnsupportedCurrencyException("Unsupported currency '{$data['currency']}'");
+            }
+            $invoice->setCurrency($data['currency']);
         }
         if (isset($data['items']) && is_array($data['items'])) {
             foreach ($data['items'] as $item) {
@@ -329,7 +341,7 @@ class Invoice
 
     /**
      * @param Issuer $issuer
-     * return Invoice
+     * @return Invoice
      */
     public function setIssuer(Issuer $issuer = null)
     {
@@ -388,6 +400,24 @@ class Invoice
     public function setPriceTotal($priceTotal)
     {
         $this->priceTotal = $priceTotal;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+
+    /**
+     * @param string $currency
+     * @return Invoice
+     */
+    public function setCurrency($currency)
+    {
+        $this->currency = $currency;
         return $this;
     }
 

@@ -28,7 +28,7 @@ class InvoiceApiTest extends PHPUnit_Framework_TestCase
             ->setVariableSymbol('123213')
             ->addItem($invoiceItem);
 
-        $dummyResponse = '{"status": "ok", "download_pdf_url": "http://download.com/", "invoice_id": "231r08iyfouihg3rt3r", "html_url": "http://html.com/"}';
+        $dummyResponse = '{"status": "ok", "id": "231r08iyfouihg3rt3r", "download_pdf_url": "http://download.com/", "html_url": "http://html.com/"}';
         $result = new Result(200, $dummyResponse);
         $transport->setResponse($result);
 
