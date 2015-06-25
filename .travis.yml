@@ -19,3 +19,6 @@ script:
     - mkdir -p build/logs
     - make sniff
     - make test
+
+after_script:
+    - CODECLIMATE_REPO_TOKEN=a48367083a763a26e44a46d2bea9df0aece3cd785c07139a95aa676c1cfacb17 ./vendor/bin/test-reporter
