@@ -2,7 +2,7 @@
   "name": "tomaj/invoice-client",
   "description": "Invoice client",
   "type": "library",
-  "license": "LGPL",
+  "license": "MIT",
   "authors": [
     {
       "name": "Tomas Majer",
