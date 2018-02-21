@@ -57,9 +57,8 @@ class InvoiceApiTest extends PHPUnit_Framework_TestCase
 
     public function testCreateInvoiceErrorResponse()
     {
-
     }
-
+    
 //    public function testGetInvoice()
 //    {
 //        $transport = new TestTransport();
