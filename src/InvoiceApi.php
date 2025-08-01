@@ -109,10 +109,10 @@ class InvoiceApi
         return $this->target . '/pdf-download/' . $id;
     }
 
-//	public function updateInvoice($id, Invoice $invoice)
-//	{
+//  public function updateInvoice($id, Invoice $invoice)
+//  {
 //        // todo
-//	}
+//  }
 
     public function deleteInvoice($id)
     {
@@ -130,8 +130,8 @@ class InvoiceApi
         return $result;
     }
 
-//	public function loadInvoices()
-//	{
+//  public function loadInvoices()
+//  {
 //        // todo
-//	}
+//  }
 }

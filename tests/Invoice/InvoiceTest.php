@@ -2,9 +2,9 @@
 
 namespace Invoice;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class InvoiceTest extends PHPUnit_Framework_TestCase
+class InvoiceTest extends TestCase
 {
     public function testCreateInvoice()
     {
@@ -60,11 +60,10 @@ class InvoiceTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(2, $items[1]->getPriceItem());
     }
 
-    /**
-     * @expectedException \Invoice\Exception\UnsupportedCurrencyException
-     */
     public function testUnsupportedCurrency()
     {
+        $this->expectException(\Invoice\Exception\UnsupportedCurrencyException::class);
+        
         Invoice::fromArray([
             'id' => 'asfd09iu23oiht3209itgh4eio3ht',
             'created' => '14.5.2015',

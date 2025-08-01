@@ -2,9 +2,9 @@
 
 namespace Invoice;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class InvoiceItemTest extends PHPUnit_Framework_TestCase
+class InvoiceItemTest extends TestCase
 {
     public function testCreateInvoiceItem()
     {
