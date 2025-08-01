@@ -4,9 +4,9 @@ namespace Invoice;
 
 use Invoice\Transport\Result;
 use Invoice\Transport\TestTransport;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class InvoiceApiTest extends PHPUnit_Framework_TestCase
+class CreateInvoiceApiTest extends TestCase
 {
     public function testCreateInvoiceItem()
     {
