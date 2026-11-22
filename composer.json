@@ -1,51 +1,100 @@
 {
-  "name": "tomaj/invoice-client",
-  "description": "Invoice client",
-  "type": "library",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Tomas Majer",
-      "homepage": "http://tomaj.sk"
+    "name": "tomaj/invoice-client",
+    "description": "PHP client for the chcemfakturu.sk invoicing API: create, fetch and delete invoices.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "invoice",
+        "invoicing",
+        "api-client",
+        "chcemfakturu",
+        "guzzle"
+    ],
+    "authors": [
+        {
+            "name": "Tomas Majer",
+            "email": "tomasmajer@gmail.com",
+            "homepage": "http://www.tomaj.sk/"
+        }
+    ],
+    "homepage": "https://tomaj.github.io/invoice-client/",
+    "support": {
+        "issues": "https://github.com/tomaj/invoice-client/issues",
+        "source": "https://github.com/tomaj/invoice-client",
+        "docs": "https://tomaj.github.io/invoice-client/",
+        "security": "https://github.com/tomaj/invoice-client/security/policy"
+    },
+    "require": {
+        "php": "^8.4",
+        "guzzlehttp/guzzle": "^7.15.2 || ^8.0.1",
+        "psr/log": "^2 || ^3"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.90",
+        "infection/infection": "^0.35",
+        "phpstan/phpstan": "^2.3",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.1",
+        "phpstan/phpstan-strict-rules": "^2.1",
+        "phpunit/phpunit": "^13.2",
+        "rector/rector": "^2.8"
+    },
+    "suggest": {
+        "monolog/monolog": "A PSR-3 logger to pass to InvoiceApi (requests, status codes and API errors are logged)"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Tomaj\\InvoiceClient\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tomaj\\InvoiceClient\\Test\\": "tests"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "infection/extension-installer": true
+        },
+        "sort-packages": true
+    },
+    "scripts": {
+        "check": [
+            "@phpcs",
+            "@phpstan",
+            "@rector",
+            "@test"
+        ],
+        "coverage": [
+            "@putenv XDEBUG_MODE=coverage",
+            "phpunit --coverage-clover build/logs/clover.xml --coverage-html build/coverage"
+        ],
+        "cs-fix": "php-cs-fixer fix",
+        "infection": [
+            "@putenv XDEBUG_MODE=coverage",
+            "infection --threads=max"
+        ],
+        "phpcs": "php-cs-fixer fix --dry-run --diff --verbose",
+        "phpstan": "phpstan analyse --memory-limit=1G",
+        "phpunit": [
+            "@putenv XDEBUG_MODE=off",
+            "phpunit --no-coverage"
+        ],
+        "rector": "rector --dry-run",
+        "rector-fix": "rector",
+        "test": "@phpunit"
+    },
+    "scripts-descriptions": {
+        "check": "Runs code style, PHPStan, Rector and the tests.",
+        "coverage": "Runs the tests with Xdebug coverage (Clover in build/logs, HTML in build/coverage).",
+        "cs-fix": "Fixes the code style with PHP-CS-Fixer.",
+        "infection": "Runs Infection mutation testing.",
+        "phpcs": "Checks the code style with PHP-CS-Fixer (dry run).",
+        "phpstan": "Runs PHPStan static analysis.",
+        "phpunit": "Runs the PHPUnit tests without coverage.",
+        "rector": "Shows the changes Rector would make (dry run).",
+        "rector-fix": "Applies Rector changes.",
+        "test": "Runs the PHPUnit tests."
     }
-  ],
-  "require": {
-    "php": "^8.3",
-    "guzzlehttp/guzzle": "^7.9"
-  },
-  "require-dev": {
-    "friendsofphp/php-cs-fixer": "^3.90",
-    "phpstan/phpstan": "^2.3",
-    "phpstan/phpstan-phpunit": "^2.1",
-    "phpstan/phpstan-strict-rules": "^2.1",
-    "phpunit/phpunit": "^12.5"
-  },
-  "autoload": {
-    "classmap": [
-      "src/"
-    ]
-  },
-  "autoload-dev": {
-    "classmap": [
-      "tests/"
-    ]
-  },
-  "scripts": {
-    "check": [
-      "@phpcs",
-      "@phpstan",
-      "@test"
-    ],
-    "cs-fix": "php-cs-fixer fix",
-    "phpcs": "php-cs-fixer fix --dry-run --diff --verbose",
-    "phpstan": "phpstan analyse --memory-limit=1G",
-    "phpunit": [
-      "@putenv XDEBUG_MODE=off",
-      "phpunit --no-coverage"
-    ],
-    "test": "@phpunit"
-  },
-  "config": {
-    "sort-packages": true
-  }
 }
