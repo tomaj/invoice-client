@@ -1,41 +1,55 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Invoice\Transport;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ServerException;
-use Symfony\Component\Config\Definition\Exception\Exception;
+use Invoice\Exception;
 
 class GuzzleTransport implements TransportInterface
 {
-    const TIMEOUT = 10;
+    public const TIMEOUT = 10;
 
-    public function call($url, $apiKey, $payload, $method = 'post')
+    private ClientInterface $client;
+
+    public function __construct(?ClientInterface $client = null)
     {
-        $headers = [
+        $this->client = $client ?? new Client([
+            'timeout' => self::TIMEOUT,
+        ]);
+    }
+
+    /**
+     * Server errors (5xx) are returned as a Result with the response body, so the caller can read the error message.
+     *
+     * @throws GuzzleException on network errors and 4xx responses
+     * @throws Exception for unsupported HTTP methods
+     */
+    public function call(string $url, string $apiKey, ?string $payload, string $method = 'post'): ?Result
+    {
+        $options = [
             'headers' => [
                 'Authorization' => 'Bearer ' . $apiKey,
             ],
         ];
 
-        if ($payload) {
-            $headers['body'] = $payload;
+        if ($payload !== null && $payload !== '') {
+            $options['body'] = $payload;
         }
 
-        $client = new Client([
-            'timeout' => self::TIMEOUT,
-        ]);
-
-        if ($method == 'post') {
+        if ($method === 'post') {
             try {
-                $response = $client->post($url, $headers);
+                $response = $this->client->request('POST', $url, $options);
             } catch (ServerException $error) {
-                echo $error->getResponse()->getBody() . "\n";
-                return new Result(500, $error->getResponse()->getBody());
+                $response = $error->getResponse();
             }
 
-            return new Result($response->getStatusCode(), $response->getBody());
+            return new Result($response->getStatusCode(), (string) $response->getBody());
         }
-        throw new Exception('error - treba osetri');
+        throw new Exception(sprintf("HTTP method '%s' is not supported by %s", $method, self::class));
     }
 }

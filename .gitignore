@@ -1,5 +1,7 @@
-vendor
+vendor/
 composer.lock
-.idea
+build/
+.phpunit.cache/
+.idea/
 *.swp
 .DS_Store

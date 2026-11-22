@@ -1,23 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Invoice;
 
 use Invoice\Response\CreateInvoiceResponse;
 use Invoice\Transport\GuzzleTransport;
+use Invoice\Transport\Result;
 use Invoice\Transport\TransportInterface;
 
 class InvoiceApi
 {
-    private $apiToken;
+    public const DEFAULT_TARGET = 'https://chcemfakturu.sk';
 
-    private $target;
+    private string $apiToken;
 
-    const DEFAULT_TARGET = 'https://chcemfakturu.sk';
+    private string $target;
+
+    /** @var object|null a Psr\Log\LoggerInterface instance */
+    private ?object $logger = null;
+
+    private ?TransportInterface $transport = null;
 
     /**
-     *
-     * @param string $apiToken   your API token
-     * @param array  $options An array of options (since PHP does not support named arguments):
+     * @param string $apiToken your API token
+     * @param array<string, mixed> $options An array of options:
      *                        'target' => 'https://chcemfakturu.sk/' // which API server to use
      *                        'transport' => new \Invoice\GuzzleTransport() // default transport
      *                        'transport' => new \Invoice\NullTransport() // transport that does not send anything
@@ -26,19 +33,13 @@ class InvoiceApi
      *                        'logger' => PSR-3 logger (a Psr\Log\LoggerInterface instance)
      * @throws Exception if an error is encountered and debug option is true
      */
-    public function __construct($apiToken, $options = [])
+    public function __construct(string $apiToken, array $options = [])
     {
         $this->apiToken = $apiToken;
         $this->target = self::DEFAULT_TARGET;
 
-        $debug = false;
-        if (array_key_exists('debug', $options)) {
-            if ($options['debug']) {
-                $debug = true;
-            }
-        }
+        $debug = (bool) ($options['debug'] ?? false);
 
-        $logger = null;
         if (array_key_exists('logger', $options)) {
             $loggerClass = 'Psr\\Log\\LoggerInterface';
             if (!($options['logger'] instanceof $loggerClass)) {
@@ -47,11 +48,9 @@ class InvoiceApi
                 }
                 return;
             }
-            $logger = $options['logger'];
+            $this->logger = $options['logger'];
         }
-        $this->logger = $logger;
 
-        $transport = null;
         if (array_key_exists('transport', $options)) {
             $transport = $options['transport'];
             if ($transport !== null && !($transport instanceof TransportInterface)) {
@@ -62,76 +61,66 @@ class InvoiceApi
         }
         $this->transport = $transport;
 
-        $target = null;
-        if (array_key_exists('target', $options)) {
-            $target = $options['target'];
-        }
+        $target = $options['target'] ?? null;
 
         if ($target !== null) {
             if (!is_string($target)) {
                 throw new Exception('Target must be string or not specified');
             }
-            if (substr($target, 0, 7) !== 'http://' && substr($target, 0, 8) !== 'https://') {
+            if (!str_starts_with($target, 'http://') && !str_starts_with($target, 'https://')) {
                 throw new Exception('Target must be start with http:// or https://');
             }
             $this->target = rtrim($target, '/');
         }
     }
 
-    /**
-     * @param Invoice $invoice
-     * @return CreateInvoiceResponse
-     */
-    public function createInvoice(Invoice $invoice)
+    public function getLogger(): ?object
+    {
+        return $this->logger;
+    }
+
+    public function createInvoice(Invoice $invoice): CreateInvoiceResponse
     {
         $serializer = new Serializer();
         $payload = $serializer->encodeInvoice($invoice);
 
-        $response = $this->transport->call($this->target . '/api/v1/invoices/create', $this->apiToken, $payload, 'post');
+        $response = $this->transport()->call($this->target . '/api/v1/invoices/create', $this->apiToken, $payload, 'post');
 
-        $createInvoiceResponse = new CreateInvoiceResponse($response);
-
-        return $createInvoiceResponse;
+        return new CreateInvoiceResponse($response ?? new Result(0, ''));
     }
 
-    public function htmlUrl($id)
+    public function htmlUrl(string $id): string
     {
         return $this->target . '/html/' . $id;
     }
 
-    public function pdfUrl($id)
+    public function pdfUrl(string $id): string
     {
         return $this->target . '/pdf/' . $id;
     }
 
-    public function pdfDownloadUrl($id)
+    public function pdfDownloadUrl(string $id): string
     {
         return $this->target . '/pdf-download/' . $id;
     }
 
-//	public function updateInvoice($id, Invoice $invoice)
-//	{
-//        // todo
-//	}
-
-    public function deleteInvoice($id)
+    public function deleteInvoice(string $id): ?Result
     {
-        $result = $this->transport->call($this->target . '/api/v1/invoices/delete/' . $id, $this->apiToken, null, 'delete');
-
-        return $result;
+        return $this->transport()->call($this->target . '/api/v1/invoices/delete/' . $id, $this->apiToken, null, 'delete');
     }
 
-    public function getInvoice($id)
+    public function getInvoice(string $id): ?Result
     {
-        $result = $this->transport->call($this->target . '/api/v1/invoices/detail/' . $id, $this->apiToken, null, 'get');
-
         // todo spracuj
-
-        return $result;
+        return $this->transport()->call($this->target . '/api/v1/invoices/detail/' . $id, $this->apiToken, null, 'get');
     }
 
-//	public function loadInvoices()
-//	{
-//        // todo
-//	}
+    private function transport(): TransportInterface
+    {
+        if ($this->transport === null) {
+            throw new Exception('No transport configured');
+        }
+
+        return $this->transport;
+    }
 }

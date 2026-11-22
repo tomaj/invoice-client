@@ -10,18 +10,42 @@
     }
   ],
   "require": {
-    "php": ">= 5.5.0",
-    "guzzlehttp/guzzle": "^6.0"
+    "php": "^8.3",
+    "guzzlehttp/guzzle": "^7.9"
   },
   "require-dev": {
-    "squizlabs/php_codesniffer": "~2.0",
-    "phpunit/phpunit": ">4.2",
-    "codeclimate/php-test-reporter": "dev-master"
+    "friendsofphp/php-cs-fixer": "^3.90",
+    "phpstan/phpstan": "^2.3",
+    "phpstan/phpstan-phpunit": "^2.1",
+    "phpstan/phpstan-strict-rules": "^2.1",
+    "phpunit/phpunit": "^12.5"
   },
-  "minimum-stability": "stable",
   "autoload": {
     "classmap": [
       "src/"
     ]
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/"
+    ]
+  },
+  "scripts": {
+    "check": [
+      "@phpcs",
+      "@phpstan",
+      "@test"
+    ],
+    "cs-fix": "php-cs-fixer fix",
+    "phpcs": "php-cs-fixer fix --dry-run --diff --verbose",
+    "phpstan": "phpstan analyse --memory-limit=1G",
+    "phpunit": [
+      "@putenv XDEBUG_MODE=off",
+      "phpunit --no-coverage"
+    ],
+    "test": "@phpunit"
+  },
+  "config": {
+    "sort-packages": true
   }
 }

@@ -1,15 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Invoice\Transport;
 
 interface TransportInterface
 {
-    /**
-     * @param string $url
-     * @param string $apiKey
-     * @param string $payload
-     * @param string $method
-     * @return Result
-     */
-    public function call($url, $apiKey, $payload, $method = 'post');
+    public function call(string $url, string $apiKey, ?string $payload, string $method = 'post'): ?Result;
 }

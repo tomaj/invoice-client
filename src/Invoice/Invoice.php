@@ -1,469 +1,365 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Invoice;
 
 use Invoice\Exception\UnsupportedCurrencyException;
 
 class Invoice
 {
-    /** @var string */
-    private $number;
+    use ArrayReader;
 
-    /** @var string */
-    private $name;
+    private string|int|null $number = null;
 
-    /** @var string */
-    private $id;
+    private ?string $name = null;
 
-    /** @var string */
-    private $created;
+    private string|int|null $id = null;
 
-    /** @var string */
-    private $delivered;
+    private ?string $created = null;
 
-    /** @var string */
-    private $due;
+    private ?string $delivered = null;
 
-    /** @var string */
-    private $status;
+    private ?string $due = null;
 
-    /** @var Address */
-    private $shippingAddress;
+    private ?string $status = null;
 
-    /** @var string */
-    private $description;
+    private ?string $description = null;
 
-    /** @var string */
-    private $variableSymbol;
+    private string|int|null $variableSymbol = null;
 
-    /** @var string */
-    private $constantSymbol;
+    private string|int|null $constantSymbol = null;
 
-    /** @var Issuer */
-    private $issuer;
+    /** @var int|float|numeric-string|null */
+    private int|float|string|null $price = null;
 
-    /** @var Client */
-    private $client;
+    /** @var int|float|numeric-string|null */
+    private int|float|string|null $priceTotal = null;
 
-    /** @var float */
-    private $price;
+    private ?Address $shippingAddress = null;
 
-    /** @var float */
-    private $priceTotal;
+    private ?Issuer $issuer = null;
 
-    /** @var  string */
-    private $currency;
+    private ?Client $client = null;
 
-    private $items = [];
+    private ?string $currency = null;
 
-    /** @var  Discount */
-    private $discount;
+    /** @var list<InvoiceItem> */
+    private array $items = [];
+
+    private ?Discount $discount = null;
 
     /**
-     * @param array $data
-     * @return Invoice
+     * @param array<mixed> $data
      * @throws UnsupportedCurrencyException
      */
-    public static function fromArray(array $data)
+    public static function fromArray(array $data): Invoice
     {
         $invoice = new Invoice();
-        if (isset($data['number'])) {
-            $invoice->setNumber($data['number']);
+        $number = self::readIdentifier($data, 'number');
+        if ($number !== null) {
+            $invoice->setNumber($number);
         }
-        if (isset($data['name'])) {
-            $invoice->setName($data['name']);
+        $name = self::readString($data, 'name');
+        if ($name !== null) {
+            $invoice->setName($name);
         }
-        if (isset($data['id'])) {
-            $invoice->setId($data['id']);
+        $id = self::readIdentifier($data, 'id');
+        if ($id !== null) {
+            $invoice->setId($id);
         }
-        if (isset($data['created'])) {
-            $invoice->setCreated($data['created']);
+        $created = self::readString($data, 'created');
+        if ($created !== null) {
+            $invoice->setCreated($created);
         }
-        if (isset($data['delivered'])) {
-            $invoice->setDelivered($data['delivered']);
+        $delivered = self::readString($data, 'delivered');
+        if ($delivered !== null) {
+            $invoice->setDelivered($delivered);
         }
-        if (isset($data['due'])) {
-            $invoice->setDue($data['due']);
+        $due = self::readString($data, 'due');
+        if ($due !== null) {
+            $invoice->setDue($due);
         }
-        if (isset($data['due'])) {
-            $invoice->setDue($data['due']);
+        $status = self::readString($data, 'status');
+        if ($status !== null) {
+            $invoice->setStatus($status);
         }
-        if (isset($data['status'])) {
-            $invoice->setStatus($data['status']);
+        $description = self::readString($data, 'description');
+        if ($description !== null) {
+            $invoice->setDescription($description);
         }
-        if (isset($data['shipping_address']) && is_array($data['shipping_address'])) {
-            $invoice->setShippingAddress(Address::fromArray($data['shipping_address']));
+        $variableSymbol = self::readIdentifier($data, 'variable_symbol');
+        if ($variableSymbol !== null) {
+            $invoice->setVariableSymbol($variableSymbol);
         }
-        if (isset($data['description'])) {
-            $invoice->setDescription($data['description']);
+        $constantSymbol = self::readIdentifier($data, 'constant_symbol');
+        if ($constantSymbol !== null) {
+            $invoice->setConstantSymbol($constantSymbol);
         }
-        if (isset($data['variable_symbol'])) {
-            $invoice->setVariableSymbol($data['variable_symbol']);
+        $price = self::readNumber($data, 'price');
+        if ($price !== null) {
+            $invoice->setPrice($price);
         }
-        if (isset($data['constant_symbol'])) {
-            $invoice->setConstantSymbol($data['constant_symbol']);
+        $priceTotal = self::readNumber($data, 'price_total');
+        if ($priceTotal !== null) {
+            $invoice->setPriceTotal($priceTotal);
         }
-        if (isset($data['issuer']) && is_array($data['issuer'])) {
-            $invoice->setIssuer(Issuer::fromArray($data['issuer']));
+        $shippingAddress = self::readArray($data, 'shipping_address');
+        if ($shippingAddress !== null) {
+            $invoice->setShippingAddress(Address::fromArray($shippingAddress));
         }
-        if (isset($data['client']) && is_array($data['client'])) {
-            $invoice->setClient(Client::fromArray($data['client']));
+        $issuer = self::readArray($data, 'issuer');
+        if ($issuer !== null) {
+            $invoice->setIssuer(Issuer::fromArray($issuer));
         }
-        if (isset($data['price'])) {
-            $invoice->setPrice($data['price']);
-        }
-        if (isset($data['price_total'])) {
-            $invoice->setPriceTotal($data['price_total']);
+        $client = self::readArray($data, 'client');
+        if ($client !== null) {
+            $invoice->setClient(Client::fromArray($client));
         }
         if (isset($data['currency'])) {
-            if (!Currency::isValid($data['currency'])) {
-                throw new UnsupportedCurrencyException("Unsupported currency '{$data['currency']}'");
+            $currency = $data['currency'];
+            if (!is_string($currency) || !Currency::isValid($currency)) {
+                throw new UnsupportedCurrencyException(sprintf("Unsupported currency '%s'", is_scalar($currency) ? $currency : get_debug_type($currency)));
             }
-            $invoice->setCurrency($data['currency']);
+            $invoice->setCurrency($currency);
         }
-        if (isset($data['items']) && is_array($data['items'])) {
-            foreach ($data['items'] as $item) {
+        foreach (self::readArray($data, 'items') ?? [] as $item) {
+            if (is_array($item)) {
                 $invoice->addItem(InvoiceItem::fromArray($item));
             }
         }
-        if (isset($data['discount']) && is_array($data['discount'])) {
-            $invoice->setDiscount(Discount::fromArray($data['discount']));
+        $discount = self::readArray($data, 'discount');
+        if ($discount !== null) {
+            $invoice->setDiscount(Discount::fromArray($discount));
         }
-
         return $invoice;
     }
 
-    /**
-     * @return string
-     */
-    public function getNumber()
+    public function getNumber(): string|int|null
     {
         return $this->number;
     }
 
-    /**
-     * @param string $number
-     * @return Invoice
-     */
-    public function setNumber($number)
+    public function setNumber(string|int|null $number): Invoice
     {
         $this->number = $number;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     * @return Invoice
-     */
-    public function setName($name)
+    public function setName(?string $name): Invoice
     {
         $this->name = $name;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): string|int|null
     {
         return $this->id;
     }
 
-    /**
-     * @param string $id
-     * @return Invoice
-     */
-    public function setId($id)
+    public function setId(string|int|null $id): Invoice
     {
         $this->id = $id;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCreated()
+    public function getCreated(): ?string
     {
         return $this->created;
     }
 
-    /**
-     * @param string $created
-     * @return Invoice
-     */
-    public function setCreated($created)
+    public function setCreated(?string $created): Invoice
     {
         $this->created = $created;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDelivered()
+    public function getDelivered(): ?string
     {
         return $this->delivered;
     }
 
-    /**
-     * @param string $delivered
-     * @return Invoice
-     */
-    public function setDelivered($delivered)
+    public function setDelivered(?string $delivered): Invoice
     {
         $this->delivered = $delivered;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDue()
+    public function getDue(): ?string
     {
         return $this->due;
     }
 
-    /**
-     * @param string $due
-     * @return Invoice
-     */
-    public function setDue($due)
+    public function setDue(?string $due): Invoice
     {
         $this->due = $due;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getStatus()
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    /**
-     * @param string $status
-     * @return Invoice
-     */
-    public function setStatus($status)
+    public function setStatus(?string $status): Invoice
     {
         $this->status = $status;
         return $this;
     }
 
-    /**
-     * @return Address
-     */
-    public function getShippingAddress()
-    {
-        return $this->shippingAddress;
-    }
-
-    /**
-     * @param Address $shippingAddress
-     * @return Invoice
-     */
-    public function setShippingAddress(Address $shippingAddress = null)
-    {
-        $this->shippingAddress = $shippingAddress;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     * @return Invoice
-     */
-    public function setDescription($description)
+    public function setDescription(?string $description): Invoice
     {
         $this->description = $description;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getVariableSymbol()
+    public function getVariableSymbol(): string|int|null
     {
         return $this->variableSymbol;
     }
 
-    /**
-     * @param string $variableSymbol
-     * @return Invoice
-     */
-    public function setVariableSymbol($variableSymbol)
+    public function setVariableSymbol(string|int|null $variableSymbol): Invoice
     {
         $this->variableSymbol = $variableSymbol;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getConstantSymbol()
+    public function getConstantSymbol(): string|int|null
     {
         return $this->constantSymbol;
     }
 
-    /**
-     * @param string $constantSymbol
-     * @return Invoice
-     */
-    public function setConstantSymbol($constantSymbol)
+    public function setConstantSymbol(string|int|null $constantSymbol): Invoice
     {
         $this->constantSymbol = $constantSymbol;
         return $this;
     }
 
     /**
-     * @return Issuer
+     * @return int|float|numeric-string|null
      */
-    public function getIssuer()
-    {
-        return $this->issuer;
-    }
-
-    /**
-     * @param Issuer $issuer
-     * @return Invoice
-     */
-    public function setIssuer(Issuer $issuer = null)
-    {
-        $this->issuer = $issuer;
-        return $this;
-    }
-
-    /**
-     * @return Client
-     */
-    public function getClient()
-    {
-        return $this->client;
-    }
-
-    /**
-     * @param Client $client
-     * @return Invoice
-     */
-    public function setClient(Client $client)
-    {
-        $this->client = $client;
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getPrice()
+    public function getPrice(): int|float|string|null
     {
         return $this->price;
     }
 
     /**
-     * @param float $price
-     * @return Invoice
+     * @param int|float|string|null $price a number or a numeric string, sent to the API as given
+     * @throws \InvalidArgumentException for a non-numeric string
      */
-    public function setPrice($price)
+    public function setPrice(int|float|string|null $price): Invoice
     {
-        $this->price = $price;
+        $this->price = self::numeric($price, 'price');
         return $this;
     }
 
     /**
-     * @return float
+     * @return int|float|numeric-string|null
      */
-    public function getPriceTotal()
+    public function getPriceTotal(): int|float|string|null
     {
         return $this->priceTotal;
     }
 
     /**
-     * @param float $priceTotal
-     * @return Invoice
+     * @param int|float|string|null $priceTotal a number or a numeric string, sent to the API as given
+     * @throws \InvalidArgumentException for a non-numeric string
      */
-    public function setPriceTotal($priceTotal)
+    public function setPriceTotal(int|float|string|null $priceTotal): Invoice
     {
-        $this->priceTotal = $priceTotal;
+        $this->priceTotal = self::numeric($priceTotal, 'price_total');
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCurrency()
+    public function getShippingAddress(): ?Address
+    {
+        return $this->shippingAddress;
+    }
+
+    public function setShippingAddress(?Address $shippingAddress = null): Invoice
+    {
+        $this->shippingAddress = $shippingAddress;
+        return $this;
+    }
+
+    public function getIssuer(): ?Issuer
+    {
+        return $this->issuer;
+    }
+
+    public function setIssuer(?Issuer $issuer = null): Invoice
+    {
+        $this->issuer = $issuer;
+        return $this;
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(Client $client): Invoice
+    {
+        $this->client = $client;
+        return $this;
+    }
+
+    public function getCurrency(): ?string
     {
         return $this->currency;
     }
 
-    /**
-     * @param string $currency
-     * @return Invoice
-     */
-    public function setCurrency($currency)
+    public function setCurrency(?string $currency): Invoice
     {
         $this->currency = $currency;
         return $this;
     }
 
     /**
-     * @return array(InvoiceItem)
+     * @return list<InvoiceItem>
      */
-    public function getItems()
+    public function getItems(): array
     {
         return $this->items;
     }
 
     /**
-     * @param array $items
+     * @param list<InvoiceItem> $items
      */
-    public function setItems($items)
+    public function setItems(array $items): Invoice
     {
         $this->items = $items;
+        return $this;
     }
 
-    /**
-     * @param InvoiceItem $invoiceItem
-     * @return $this
-     */
-    public function addItem(InvoiceItem $invoiceItem)
+    public function addItem(InvoiceItem $invoiceItem): Invoice
     {
         $this->items[] = $invoiceItem;
         return $this;
     }
 
-    /**
-     * @return Discount
-     */
-    public function getDiscount()
+    public function getDiscount(): ?Discount
     {
         return $this->discount;
     }
 
     /**
-     * @param Discount $discount
-     * @return Invoice
-     * @throws \Exception
+     * @throws Exception when a flat discount is given
      */
-    public function setDiscount($discount)
+    public function setDiscount(Discount $discount): Invoice
     {
-        if ($discount->getType() == 'flat') {
-            throw new \Exception('Flat discount is unsupported for invoice. Add new item with negative price for flat discount.');
+        if ($discount->getType() === 'flat') {
+            throw new Exception('Flat discount is unsupported for invoice. Add new item with negative price for flat discount.');
         }
         $this->discount = $discount;
         return $this;

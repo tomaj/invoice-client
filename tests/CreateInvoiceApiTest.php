@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Invoice;
 
 use Invoice\Transport\Result;
 use Invoice\Transport\TestTransport;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class InvoiceApiTest extends PHPUnit_Framework_TestCase
+class CreateInvoiceApiTest extends TestCase
 {
-    public function testCreateInvoiceItem()
+    public function testCreateInvoiceItem(): void
     {
         $transport = new TestTransport();
         $invoiceApi = new InvoiceApi('941240975320975', [
@@ -36,47 +38,90 @@ class InvoiceApiTest extends PHPUnit_Framework_TestCase
 
         // check what client sent
         $payload = $transport->getPayload();
-        $data = json_decode($payload, true);
-        $data = $data['invoice'];
-
-        $this->assertEquals('123213', $data['variable_symbol']);
-        $this->assertEquals('200011', $data['number']);
-        $this->assertEquals('Invoice 200011', $data['name']);
-        $this->assertEquals('invoice description', $data['description']);
-        $this->assertEquals(2, $data['items'][0]['quantity']);
-        $this->assertEquals(20, $data['items'][0]['vat']);
-        $this->assertEquals(2.3, $data['items'][0]['price']);
-        $this->assertEquals('percent', $data['items'][0]['discount']['type']);
-        $this->assertEquals(20, $data['items'][0]['discount']['value']);
+        self::assertNotNull($payload);
+        self::assertJsonStringEqualsJsonString(json_encode(['invoice' => [
+            'id' => null,
+            'number' => '200011',
+            'name' => 'Invoice 200011',
+            'created' => null,
+            'delivered' => null,
+            'due' => null,
+            'status' => null,
+            'variable_symbol' => '123213',
+            'constant_symbol' => null,
+            'description' => 'invoice description',
+            'items' => [
+                [
+                    'vat' => 20,
+                    'quantity' => 2,
+                    'description' => null,
+                    'price_item' => null,
+                    'price' => 2.3,
+                    'price_total' => null,
+                    'discount' => [
+                        'type' => 'percent',
+                        'value' => 20,
+                    ],
+                ],
+            ],
+            'price' => null,
+            'price_total' => null,
+            'currency' => null,
+        ]], JSON_THROW_ON_ERROR), $payload);
 
         // check what client read
-        $this->assertEquals('231r08iyfouihg3rt3r', $result->getId());
-        $this->assertEquals('http://download.com/', $result->getDownloadUrl());
-        $this->assertEquals('http://html.com/', $result->getHtmlUrl());
+        self::assertEquals('231r08iyfouihg3rt3r', $result->getId());
+        self::assertEquals('http://download.com/', $result->getDownloadUrl());
+        self::assertEquals('http://html.com/', $result->getHtmlUrl());
     }
 
-    public function testCreateInvoiceErrorResponse()
+    public function testCreateInvoiceErrorResponse(): void
     {
+        $transport = new TestTransport();
+        $invoiceApi = new InvoiceApi('941240975320975', [
+            'transport' => $transport,
+        ]);
+        $transport->setResponse(new Result(400, '{"status": "error", "message": "Invalid invoice"}'));
+
+        $result = $invoiceApi->createInvoice((new Invoice())->setName('Invoice 1'));
+
+        self::assertFalse($result->isOk());
+        self::assertSame('Invalid invoice', $result->getErrorMessage());
+        self::assertNull($result->getId());
     }
-    
-//    public function testGetInvoice()
-//    {
-//        $transport = new TestTransport();
-//        $invoiceApi = new InvoiceApi('941240975320975', [
-//            'transport' => $transport,
-//        ]);
-//
-//        $result = $invoiceApi->getInvoice('sadoywaf08yesfo8ysgreg');
-//
-//    }
-//
-//    public function testDeleteInvoice()
-//    {
-//        $transport = new TestTransport();
-//        $invoiceApi = new InvoiceApi('941240975320975', [
-//            'transport' => $transport,
-//        ]);
-//
-//        $result = $invoiceApi->deleteInvoice('sadoywaf08yesfo8ysgreg');
-//    }
+
+    public function testCreateInvoiceUnparsableResponse(): void
+    {
+        $transport = new TestTransport();
+        $invoiceApi = new InvoiceApi('941240975320975', [
+            'transport' => $transport,
+        ]);
+        $transport->setResponse(new Result(500, 'Internal Server Error'));
+
+        $result = $invoiceApi->createInvoice(new Invoice());
+
+        self::assertFalse($result->isOk());
+        self::assertSame('Cannot parse response from server', $result->getErrorMessage());
+    }
+
+    //    public function testGetInvoice(): void
+    //    {
+    //        $transport = new TestTransport();
+    //        $invoiceApi = new InvoiceApi('941240975320975', [
+    //            'transport' => $transport,
+    //        ]);
+    //
+    //        $result = $invoiceApi->getInvoice('sadoywaf08yesfo8ysgreg');
+    //
+    //    }
+    //
+    //    public function testDeleteInvoice(): void
+    //    {
+    //        $transport = new TestTransport();
+    //        $invoiceApi = new InvoiceApi('941240975320975', [
+    //            'transport' => $transport,
+    //        ]);
+    //
+    //        $result = $invoiceApi->deleteInvoice('sadoywaf08yesfo8ysgreg');
+    //    }
 }

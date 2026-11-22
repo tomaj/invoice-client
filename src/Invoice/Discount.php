@@ -1,65 +1,65 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Invoice;
 
 class Discount
 {
-    private $type;
+    use ArrayReader;
 
-    private $value;
+    private string $type;
 
-    public function __construct($type, $value)
+    /** @var int|float|numeric-string */
+    private int|float|string $value;
+
+    /**
+     * @param int|float|string $value a number or a numeric string, sent to the API as given
+     * @throws \InvalidArgumentException for a non-numeric string
+     */
+    public function __construct(string $type, int|float|string $value)
     {
         $this->type = $type;
-        $this->value = $value;
-    }
-
-    public static function fromArray($data)
-    {
-        $type = 'none';
-        $value = 0;
-        if (isset($data['type'])) {
-            $type = $data['type'];
-        }
-        if (isset($data['value'])) {
-            $value = floatval($data['value']);
-        }
-        return new Discount($type, $value);
+        $this->value = self::numeric($value, 'value') ?? 0;
     }
 
     /**
-     * @return string
+     * @param array<mixed> $data
      */
-    public function getType()
+    public static function fromArray(array $data): Discount
+    {
+        return new Discount(
+            self::readString($data, 'type') ?? 'none',
+            (float) (self::readNumber($data, 'value') ?? 0),
+        );
+    }
+
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     * @return Discount
-     */
-    public function setType($type)
+    public function setType(string $type): Discount
     {
         $this->type = $type;
         return $this;
     }
 
     /**
-     * @return float
+     * @return int|float|numeric-string
      */
-    public function getValue()
+    public function getValue(): int|float|string
     {
         return $this->value;
     }
 
     /**
-     * @param float $value
-     * @return Discount
+     * @param int|float|string $value a number or a numeric string, sent to the API as given
+     * @throws \InvalidArgumentException for a non-numeric string
      */
-    public function setValue($value)
+    public function setValue(int|float|string $value): Discount
     {
-        $this->value = $value;
+        $this->value = self::numeric($value, 'value') ?? 0;
         return $this;
     }
 }
