@@ -1,0 +1,4 @@
+created inv-1
+failed: Invalid VAT number
+POST https://chcemfakturu.sk/api/v1/invoices/create
+POST https://chcemfakturu.sk/api/v1/invoices/create

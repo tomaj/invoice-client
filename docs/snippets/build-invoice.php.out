@@ -1,0 +1,27 @@
+{
+    "invoice": {
+        "id": null,
+        "number": "2024001",
+        "name": null,
+        "created": null,
+        "delivered": null,
+        "due": null,
+        "status": null,
+        "variable_symbol": null,
+        "constant_symbol": null,
+        "description": null,
+        "items": [
+            {
+                "vat": 20,
+                "quantity": 10,
+                "description": "Consulting",
+                "price_item": null,
+                "price": "40.00",
+                "price_total": null
+            }
+        ],
+        "price": null,
+        "price_total": null,
+        "currency": "EUR"
+    }
+}
