@@ -1,0 +1,75 @@
+name: Bug report
+description: Report a defect or unexpected behaviour in invoice-client
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug.
+
+        If this is a security vulnerability, do not continue. Report it privately at https://github.com/tomaj/invoice-client/security/advisories/new (see SECURITY.md).
+
+        Never paste your API token or real customer data.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug description
+      description: What went wrong?
+    validations:
+      required: true
+
+  - type: textarea
+    id: code
+    attributes:
+      label: Code sample
+      description: The smallest snippet that shows the problem. Remove the API token and personal data.
+      render: php
+      placeholder: |
+        $api = new InvoiceApi($token);
+        $response = $api->createInvoice($invoice);
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: What happened instead? Include the exception message or the response status and error message.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: invoice-client version
+      description: The version from composer, for example 1.0.0 or dev-master.
+    validations:
+      required: true
+
+  - type: input
+    id: php-version
+    attributes:
+      label: PHP version
+      description: Output of `php -v`.
+      placeholder: "8.4"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and this is not a duplicate
+          required: true
+        - label: This is not a security vulnerability
+          required: true

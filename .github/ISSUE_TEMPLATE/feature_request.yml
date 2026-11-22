@@ -1,0 +1,45 @@
+name: Feature request
+description: Suggest an improvement to invoice-client
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion. invoice-client is a PHP client for the chcemfakturu.sk invoicing API; breaking ideas wait for the next major version.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is difficult or missing today? Link the API documentation if it is about a new endpoint or field.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How should the client behave?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: compatibility
+    attributes:
+      label: Compatibility
+      description: Can this land without a breaking change?
+      options:
+        - Yes, it can ship in a minor version
+        - No, it needs a new major version
+        - Not sure
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and this is not a duplicate
+          required: true
