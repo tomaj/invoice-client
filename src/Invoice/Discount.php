@@ -1,63 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Invoice;
 
 class Discount
 {
-    private $type;
+    use ArrayReader;
 
-    private $value;
+    private string $type;
 
-    public function __construct($type, $value)
+    private int|float $value;
+
+    public function __construct(string $type, int|float $value)
     {
         $this->type = $type;
         $this->value = $value;
     }
 
-    public static function fromArray($data)
+    /**
+     * @param array<mixed> $data
+     */
+    public static function fromArray(array $data): Discount
     {
-        $type = 'none';
-        $value = 0;
-        if (isset($data['type'])) {
-            $type = $data['type'];
-        }
-        if (isset($data['value'])) {
-            $value = floatval($data['value']);
-        }
-        return new Discount($type, $value);
+        return new Discount(
+            self::readString($data, 'type') ?? 'none',
+            (float) (self::readNumber($data, 'value') ?? 0),
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     * @return Discount
-     */
-    public function setType($type)
+    public function setType(string $type): Discount
     {
         $this->type = $type;
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getValue()
+    public function getValue(): int|float
     {
         return $this->value;
     }
 
-    /**
-     * @param float $value
-     * @return Discount
-     */
-    public function setValue($value)
+    public function setValue(int|float $value): Discount
     {
         $this->value = $value;
         return $this;

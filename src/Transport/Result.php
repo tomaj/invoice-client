@@ -1,25 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Invoice\Transport;
 
 class Result
 {
-    private $code;
+    private int $code;
 
-    private $body;
+    private string $body;
 
-    public function __construct($code, $body)
+    public function __construct(int $code, string $body)
     {
         $this->code = $code;
         $this->body = $body;
     }
 
-    public function getCode()
+    public function getCode(): int
     {
         return $this->code;
     }
 
-    public function getBody()
+    public function getBody(): string
     {
         return $this->body;
     }

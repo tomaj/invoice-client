@@ -1,45 +1,47 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Invoice\Transport;
 
 class TestTransport implements TransportInterface
 {
-    private $response;
+    private ?Result $response = null;
 
-    private $url;
+    private ?string $url = null;
 
-    private $apikey;
+    private ?string $apikey = null;
 
-    private $payload;
+    private ?string $payload = null;
 
-    private $method;
+    private ?string $method = null;
 
-    public function setResponse(Result $response)
+    public function setResponse(Result $response): void
     {
         $this->response = $response;
     }
 
-    public function getUrl()
+    public function getUrl(): ?string
     {
         return $this->url;
     }
 
-    public function getApiKey()
+    public function getApiKey(): ?string
     {
         return $this->apikey;
     }
 
-    public function getPayload()
+    public function getPayload(): ?string
     {
         return $this->payload;
     }
 
-    public function getMethod()
+    public function getMethod(): ?string
     {
         return $this->method;
     }
 
-    public function call($url, $apiKey, $payload, $method = 'post')
+    public function call(string $url, string $apiKey, ?string $payload, string $method = 'post'): ?Result
     {
         $this->url = $url;
         $this->apikey = $apiKey;

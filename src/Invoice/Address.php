@@ -1,217 +1,170 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Invoice;
 
 class Address
 {
-    private $street;
+    use ArrayReader;
 
-    private $street2;
+    private ?string $street = null;
 
-    private $zip;
+    private ?string $street2 = null;
 
-    private $email;
+    private ?string $zip = null;
 
-    private $tel;
+    private ?string $email = null;
 
-    private $fax;
+    private ?string $tel = null;
 
-    private $city;
+    private ?string $fax = null;
 
-    private $country;
+    private ?string $city = null;
 
-    private $state;
+    private ?string $country = null;
 
-    public static function fromArray($data)
+    private ?string $state = null;
+
+    /**
+     * @param array<mixed> $data
+     */
+    public static function fromArray(array $data): Address
     {
         $address = new Address();
-        if (isset($data['street'])) {
-            $address->setStreet($data['street']);
+        $street = self::readString($data, 'street');
+        if ($street !== null) {
+            $address->setStreet($street);
         }
-        if (isset($data['street2'])) {
-            $address->setStreet2($data['street2']);
+        $street2 = self::readString($data, 'street2');
+        if ($street2 !== null) {
+            $address->setStreet2($street2);
         }
-        if (isset($data['zip'])) {
-            $address->setZip($data['zip']);
+        $zip = self::readString($data, 'zip');
+        if ($zip !== null) {
+            $address->setZip($zip);
         }
-        if (isset($data['city'])) {
-            $address->setCity($data['city']);
+        $email = self::readString($data, 'email');
+        if ($email !== null) {
+            $address->setEmail($email);
         }
-        if (isset($data['country'])) {
-            $address->setCountry($data['country']);
+        $tel = self::readString($data, 'tel');
+        if ($tel !== null) {
+            $address->setTel($tel);
         }
-        if (isset($data['state'])) {
-            $address->setState($data['state']);
+        $fax = self::readString($data, 'fax');
+        if ($fax !== null) {
+            $address->setFax($fax);
         }
-        if (isset($data['tel'])) {
-            $address->setTel($data['tel']);
+        $city = self::readString($data, 'city');
+        if ($city !== null) {
+            $address->setCity($city);
         }
-        if (isset($data['fax'])) {
-            $address->setFax($data['fax']);
+        $country = self::readString($data, 'country');
+        if ($country !== null) {
+            $address->setCountry($country);
         }
-        if (isset($data['email'])) {
-            $address->setEmail($data['email']);
+        $state = self::readString($data, 'state');
+        if ($state !== null) {
+            $address->setState($state);
         }
         return $address;
     }
 
-    /**
-     * @return string
-     */
-    public function getStreet()
+    public function getStreet(): ?string
     {
         return $this->street;
     }
 
-    /**
-     * @param string $street
-     * @return Address
-     */
-    public function setStreet($street)
+    public function setStreet(?string $street): Address
     {
         $this->street = $street;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getStreet2()
+    public function getStreet2(): ?string
     {
         return $this->street2;
     }
 
-    /**
-     * @param string $street2
-     * @return Address
-     */
-    public function setStreet2($street2)
+    public function setStreet2(?string $street2): Address
     {
         $this->street2 = $street2;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getZip()
+    public function getZip(): ?string
     {
         return $this->zip;
     }
 
-    /**
-     * @param string $zip
-     * @return Address
-     */
-    public function setZip($zip)
+    public function setZip(?string $zip): Address
     {
         $this->zip = $zip;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    /**
-     * @param string $email
-     * @return Address
-     */
-    public function setEmail($email)
+    public function setEmail(?string $email): Address
     {
         $this->email = $email;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getTel()
+    public function getTel(): ?string
     {
         return $this->tel;
     }
 
-    /**
-     * @param string $tel
-     * @return Address
-     */
-    public function setTel($tel)
+    public function setTel(?string $tel): Address
     {
         $this->tel = $tel;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFax()
+    public function getFax(): ?string
     {
         return $this->fax;
     }
 
-    /**
-     * @param string $fax
-     * @return Address
-     */
-    public function setFax($fax)
+    public function setFax(?string $fax): Address
     {
         $this->fax = $fax;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCity()
+    public function getCity(): ?string
     {
         return $this->city;
     }
 
-    /**
-     * @param string $city
-     * @return Address
-     */
-    public function setCity($city)
+    public function setCity(?string $city): Address
     {
         $this->city = $city;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCountry()
+    public function getCountry(): ?string
     {
         return $this->country;
     }
 
-    /**
-     * @param string $country
-     * @return Address
-     */
-    public function setCountry($country)
+    public function setCountry(?string $country): Address
     {
         $this->country = $country;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getState()
+    public function getState(): ?string
     {
         return $this->state;
     }
 
-    /**
-     * @param string $state
-     * @return Address
-     */
-    public function setState($state)
+    public function setState(?string $state): Address
     {
         $this->state = $state;
         return $this;

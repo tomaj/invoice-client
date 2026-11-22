@@ -1,145 +1,119 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Invoice;
 
 class Client
 {
-    private $name;
+    use ArrayReader;
 
-    private $company;
+    private ?string $name = null;
 
-    private $identifier;
+    private ?string $company = null;
 
-    private $vatNumber;
+    private ?string $identifier = null;
 
-    private $taxNumber;
+    private ?string $vatNumber = null;
 
-    private $address;
+    private ?string $taxNumber = null;
 
-    public static function fromArray($data)
+    private ?Address $address = null;
+
+    /**
+     * @param array<mixed> $data
+     */
+    public static function fromArray(array $data): Client
     {
         $client = new Client();
-        if (isset($data['name'])) {
-            $client->setName($data['name']);
+        $name = self::readString($data, 'name');
+        if ($name !== null) {
+            $client->setName($name);
         }
-        if (isset($data['company'])) {
-            $client->setCompany($data['company']);
+        $company = self::readString($data, 'company');
+        if ($company !== null) {
+            $client->setCompany($company);
         }
-        if (isset($data['vat_number'])) {
-            $client->setVatNumber($data['vat_number']);
+        $identifier = self::readString($data, 'identifier');
+        if ($identifier !== null) {
+            $client->setIdentifier($identifier);
         }
-        if (isset($data['tax_number'])) {
-            $client->setTaxNumber($data['tax_number']);
+        $vatNumber = self::readString($data, 'vat_number');
+        if ($vatNumber !== null) {
+            $client->setVatNumber($vatNumber);
         }
-        if (isset($data['address'])) {
-            $client->setAddress(Address::fromArray($data['address']));
+        $taxNumber = self::readString($data, 'tax_number');
+        if ($taxNumber !== null) {
+            $client->setTaxNumber($taxNumber);
+        }
+        $address = self::readArray($data, 'address');
+        if ($address !== null) {
+            $client->setAddress(Address::fromArray($address));
         }
         return $client;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     * @return Client
-     */
-    public function setName($name)
+    public function setName(?string $name): Client
     {
         $this->name = $name;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCompany()
+    public function getCompany(): ?string
     {
         return $this->company;
     }
 
-    /**
-     * @param string $company
-     * @return Client
-     */
-    public function setCompany($company)
+    public function setCompany(?string $company): Client
     {
         $this->company = $company;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getIdentifier()
+    public function getIdentifier(): ?string
     {
         return $this->identifier;
     }
 
-    /**
-     * @param string $identifier
-     * @return Client
-     */
-    public function setIdentifier($identifier)
+    public function setIdentifier(?string $identifier): Client
     {
         $this->identifier = $identifier;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getVatNumber()
+    public function getVatNumber(): ?string
     {
         return $this->vatNumber;
     }
 
-    /**
-     * @param string $vatNumber
-     * @return Client
-     */
-    public function setVatNumber($vatNumber)
+    public function setVatNumber(?string $vatNumber): Client
     {
         $this->vatNumber = $vatNumber;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getTaxNumber()
+    public function getTaxNumber(): ?string
     {
         return $this->taxNumber;
     }
 
-    /**
-     * @param string $taxNumber
-     * @return Client
-     */
-    public function setTaxNumber($taxNumber)
+    public function setTaxNumber(?string $taxNumber): Client
     {
         $this->taxNumber = $taxNumber;
         return $this;
     }
 
-    /**
-     * @return Address
-     */
-    public function getAddress()
+    public function getAddress(): ?Address
     {
         return $this->address;
     }
 
-    /**
-     * @param Address $address
-     * @return Client
-     */
-    public function setAddress(Address $address = null)
+    public function setAddress(?Address $address = null): Client
     {
         $this->address = $address;
         return $this;

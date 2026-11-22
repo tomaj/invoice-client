@@ -1,171 +1,136 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Invoice;
 
 class InvoiceItem
 {
-    private $quantity;
+    use ArrayReader;
 
-    private $vat;
+    private int|float|null $quantity = null;
 
-    private $priceItem;
+    private int|float|null $vat = null;
 
-    private $price;
+    private int|float|null $priceItem = null;
 
-    private $priceTotal;
+    private int|float|null $price = null;
 
-    private $description;
+    private int|float|null $priceTotal = null;
 
-    private $discount;
+    private ?string $description = null;
 
-    public static function fromArray($data)
-    {
-        $item = new InvoiceItem();
-        if (isset($data['quantity'])) {
-            $item->setQuantity($data['quantity']);
-        }
-        if (isset($data['vat'])) {
-            $item->setVat($data['vat']);
-        }
-        if (isset($data['price_item'])) {
-            $item->setPriceItem($data['price_item']);
-        }
-        if (isset($data['price'])) {
-            $item->setPrice($data['price']);
-        }
-        if (isset($data['price_total'])) {
-            $item->setPriceTotal($data['price_total']);
-        }
-        if (isset($data['description'])) {
-            $item->setPriceTotal($data['description']);
-        }
-        if (isset($data['discount']) && is_array($data['discount'])) {
-            $item->setDiscount(Discount::fromArray($data['discount']));
-        }
-        return $item;
-    }
+    private ?Discount $discount = null;
 
     /**
-     * @return int
+     * @param array<mixed> $data
      */
-    public function getQuantity()
+    public static function fromArray(array $data): InvoiceItem
+    {
+        $invoiceItem = new InvoiceItem();
+        $quantity = self::readNumber($data, 'quantity');
+        if ($quantity !== null) {
+            $invoiceItem->setQuantity($quantity);
+        }
+        $vat = self::readNumber($data, 'vat');
+        if ($vat !== null) {
+            $invoiceItem->setVat($vat);
+        }
+        $priceItem = self::readNumber($data, 'price_item');
+        if ($priceItem !== null) {
+            $invoiceItem->setPriceItem($priceItem);
+        }
+        $price = self::readNumber($data, 'price');
+        if ($price !== null) {
+            $invoiceItem->setPrice($price);
+        }
+        $priceTotal = self::readNumber($data, 'price_total');
+        if ($priceTotal !== null) {
+            $invoiceItem->setPriceTotal($priceTotal);
+        }
+        $description = self::readString($data, 'description');
+        if ($description !== null) {
+            $invoiceItem->setDescription($description);
+        }
+        $discount = self::readArray($data, 'discount');
+        if ($discount !== null) {
+            $invoiceItem->setDiscount(Discount::fromArray($discount));
+        }
+        return $invoiceItem;
+    }
+
+    public function getQuantity(): int|float|null
     {
         return $this->quantity;
     }
 
-    /**
-     * @param int $quantity
-     * @return InvoiceItem
-     */
-    public function setQuantity($quantity)
+    public function setQuantity(int|float|null $quantity): InvoiceItem
     {
         $this->quantity = $quantity;
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getVat()
+    public function getVat(): int|float|null
     {
         return $this->vat;
     }
 
-    /**
-     * @param float $vat
-     * @return InvoiceItem
-     */
-    public function setVat($vat)
+    public function setVat(int|float|null $vat): InvoiceItem
     {
         $this->vat = $vat;
         return $this;
     }
 
-    /**
-     * @return float mixed
-     */
-    public function getPriceItem()
+    public function getPriceItem(): int|float|null
     {
         return $this->priceItem;
     }
 
-    /**
-     * @param float $priceItem
-     * @return InvoiceItem
-     */
-    public function setPriceItem($priceItem)
+    public function setPriceItem(int|float|null $priceItem): InvoiceItem
     {
         $this->priceItem = $priceItem;
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getPrice()
+    public function getPrice(): int|float|null
     {
         return $this->price;
     }
 
-    /**
-     * @param float $price
-     * @return InvoiceItem
-     */
-    public function setPrice($price)
+    public function setPrice(int|float|null $price): InvoiceItem
     {
         $this->price = $price;
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getPriceTotal()
+    public function getPriceTotal(): int|float|null
     {
         return $this->priceTotal;
     }
 
-    /**
-     * @param float $priceTotal
-     * @return InvoiceItem
-     */
-    public function setPriceTotal($priceTotal)
+    public function setPriceTotal(int|float|null $priceTotal): InvoiceItem
     {
         $this->priceTotal = $priceTotal;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     * @return InvoiceItem
-     */
-    public function setDescription($description)
+    public function setDescription(?string $description): InvoiceItem
     {
         $this->description = $description;
         return $this;
     }
 
-    /**
-     * @return Discount
-     */
-    public function getDiscount()
+    public function getDiscount(): ?Discount
     {
         return $this->discount;
     }
 
-    /**
-     * @param Discount $discount
-     * @return InvoiceItem
-     */
-    public function setDiscount($discount)
+    public function setDiscount(?Discount $discount): InvoiceItem
     {
         $this->discount = $discount;
         return $this;

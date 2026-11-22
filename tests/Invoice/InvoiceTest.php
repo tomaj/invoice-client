@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Invoice;
 
-use PHPUnit_Framework_TestCase;
+use Invoice\Exception\UnsupportedCurrencyException;
+use PHPUnit\Framework\TestCase;
 
-class InvoiceTest extends PHPUnit_Framework_TestCase
+class InvoiceTest extends TestCase
 {
-    public function testCreateInvoice()
+    public function testCreateInvoice(): void
     {
         $invoice = Invoice::fromArray([
             'number' => '20150001',
@@ -24,7 +27,7 @@ class InvoiceTest extends PHPUnit_Framework_TestCase
                 'name' => 'Albert Albert',
                 'address' => [
                     'tel' => '124321 32 32',
-                ]
+                ],
             ],
             'items' => [
                 [
@@ -35,42 +38,41 @@ class InvoiceTest extends PHPUnit_Framework_TestCase
                     'quantity' => 4,
                     'price_item' => 2,
                 ],
-            ]
+            ],
         ]);
 
-        $this->assertEquals('20150001', $invoice->getNumber());
-        $this->assertEquals('Invoice 1', $invoice->getName());
-        $this->assertEquals('asfd09iu23oiht3209itgh4eio3ht', $invoice->getId());
-        $this->assertEquals('14.5.2015', $invoice->getCreated());
-        $this->assertEquals('13.5.2015', $invoice->getDelivered());
-        $this->assertEquals('29.5.2015', $invoice->getDue());
-        $this->assertEquals('paid', $invoice->getStatus());
-        $this->assertEquals('CZK', $invoice->getCurrency());
+        self::assertEquals('20150001', $invoice->getNumber());
+        self::assertEquals('Invoice 1', $invoice->getName());
+        self::assertEquals('asfd09iu23oiht3209itgh4eio3ht', $invoice->getId());
+        self::assertEquals('14.5.2015', $invoice->getCreated());
+        self::assertEquals('13.5.2015', $invoice->getDelivered());
+        self::assertEquals('29.5.2015', $invoice->getDue());
+        self::assertEquals('paid', $invoice->getStatus());
+        self::assertEquals('CZK', $invoice->getCurrency());
 
-        $this->assertEquals('asfsaf@asdsad.sk', $invoice->getShippingAddress()->getEmail());
+        self::assertEquals('asfsaf@asdsad.sk', $invoice->getShippingAddress()?->getEmail());
 
         $client = $invoice->getClient();
-        $this->assertEquals('Albert Albert', $client->getName());
-        $this->assertEquals('124321 32 32', $client->getAddress()->getTel());
+        self::assertNotNull($client);
+        self::assertEquals('Albert Albert', $client->getName());
+        self::assertEquals('124321 32 32', $client->getAddress()?->getTel());
 
         $items = $invoice->getItems();
-        $this->assertEquals(10, $items[0]->getQuantity());
-        $this->assertEquals(14, $items[0]->getPriceItem());
-        $this->assertEquals(4, $items[1]->getQuantity());
-        $this->assertEquals(2, $items[1]->getPriceItem());
+        self::assertEquals(10, $items[0]->getQuantity());
+        self::assertEquals(14, $items[0]->getPriceItem());
+        self::assertEquals(4, $items[1]->getQuantity());
+        self::assertEquals(2, $items[1]->getPriceItem());
     }
 
-    /**
-     * @expectedException \Invoice\Exception\UnsupportedCurrencyException
-     */
-    public function testUnsupportedCurrency()
+    public function testUnsupportedCurrency(): void
     {
+        $this->expectException(UnsupportedCurrencyException::class);
         Invoice::fromArray([
             'id' => 'asfd09iu23oiht3209itgh4eio3ht',
             'created' => '14.5.2015',
             'delivered' => '13.5.2015',
             'due' => '29.5.2015',
-            'currency' => 'asdq3r3'
+            'currency' => 'asdq3r3',
         ]);
     }
 }

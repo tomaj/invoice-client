@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Invoice;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class InvoiceItemTest extends PHPUnit_Framework_TestCase
+class InvoiceItemTest extends TestCase
 {
-    public function testCreateInvoiceItem()
+    public function testCreateInvoiceItem(): void
     {
         $item = InvoiceItem::fromArray([
             'quantity' => 10,
@@ -15,10 +17,10 @@ class InvoiceItemTest extends PHPUnit_Framework_TestCase
             'price' => 42,
             'price_total' => 50.4,
         ]);
-        $this->assertEquals(10, $item->getQuantity());
-        $this->assertEquals(20, $item->getVat());
-        $this->assertEquals(4.2, $item->getPriceItem());
-        $this->assertEquals(42, $item->getPrice());
-        $this->assertEquals(50.4, $item->getPriceTotal());
+        self::assertEquals(10, $item->getQuantity());
+        self::assertEquals(20, $item->getVat());
+        self::assertEquals(4.2, $item->getPriceItem());
+        self::assertEquals(42, $item->getPrice());
+        self::assertEquals(50.4, $item->getPriceTotal());
     }
 }

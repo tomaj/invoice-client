@@ -1,10 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Invoice;
 
 class Serializer
 {
-    public function encodeInvoice(Invoice $invoice)
+    /**
+     * @throws \JsonException
+     */
+    public function encodeInvoice(Invoice $invoice): string
     {
         $data = [
             'id' => $invoice->getId(),
@@ -22,22 +27,28 @@ class Serializer
             'price_total' => $invoice->getPriceTotal(),
             'currency' => $invoice->getCurrency(),
         ];
-        if ($invoice->getClient()) {
-            $data['client'] = $this->encodeClient($invoice->getClient());
+        $client = $invoice->getClient();
+        if ($client !== null) {
+            $data['client'] = $this->encodeClient($client);
         }
-        if ($invoice->getShippingAddress()) {
-            $data['shipping_address'] = $this->encodeAddress($invoice->getShippingAddress());
+        $shippingAddress = $invoice->getShippingAddress();
+        if ($shippingAddress !== null) {
+            $data['shipping_address'] = $this->encodeAddress($shippingAddress);
         }
-        if ($invoice->getDiscount() && $invoice->getDiscount()->getType() != 'none') {
+        $discount = $invoice->getDiscount();
+        if ($discount !== null && $discount->getType() !== 'none') {
             $data['discount'] = [
-                'type' => $invoice->getDiscount()->getType(),
-                'value' => $invoice->getDiscount()->getValue(),
+                'type' => $discount->getType(),
+                'value' => $discount->getValue(),
             ];
         }
-        return json_encode(['invoice' => $data]);
+        return json_encode(['invoice' => $data], JSON_THROW_ON_ERROR);
     }
 
-    public function encodeClient(Client $client)
+    /**
+     * @return array<string, mixed>
+     */
+    public function encodeClient(Client $client): array
     {
         $data = [
             'name' => $client->getName(),
@@ -46,13 +57,17 @@ class Serializer
             'vat_number' => $client->getVatNumber(),
             'tax_number' => $client->getTaxNumber(),
         ];
-        if ($client->getAddress()) {
-            $data['address'] = $this->encodeAddress($client->getAddress());
+        $address = $client->getAddress();
+        if ($address !== null) {
+            $data['address'] = $this->encodeAddress($address);
         }
         return $data;
     }
 
-    public function encodeAddress(Address $address)
+    /**
+     * @return array<string, string|null>
+     */
+    public function encodeAddress(Address $address): array
     {
         return [
             'street' => $address->getStreet(),
@@ -63,11 +78,15 @@ class Serializer
             'state' => $address->getState(),
             'email' => $address->getEmail(),
             'tel' => $address->getTel(),
-            'fax' => $address->getZip(),
+            'fax' => $address->getFax(),
         ];
     }
 
-    public function encodeItems(array $items)
+    /**
+     * @param array<InvoiceItem> $items
+     * @return list<array<string, mixed>>
+     */
+    public function encodeItems(array $items): array
     {
         $result = [];
         foreach ($items as $item) {
@@ -79,10 +98,11 @@ class Serializer
                 'price' => $item->getPrice(),
                 'price_total' => $item->getPriceTotal(),
             ];
-            if ($item->getDiscount() && $item->getDiscount()->getType() != 'none') {
+            $discount = $item->getDiscount();
+            if ($discount !== null && $discount->getType() !== 'none') {
                 $row['discount'] = [
-                    'type' => $item->getDiscount()->getType(),
-                    'value' => $item->getDiscount()->getValue(),
+                    'type' => $discount->getType(),
+                    'value' => $discount->getValue(),
                 ];
             }
             $result[] = $row;
@@ -90,8 +110,11 @@ class Serializer
         return $result;
     }
 
-    public function decodeInvoice($paylod)
+    /**
+     * @throws \JsonException
+     */
+    public function decodeInvoice(string $paylod): mixed
     {
-        return json_decode($paylod, true);
+        return json_decode($paylod, true, 512, JSON_THROW_ON_ERROR);
     }
 }

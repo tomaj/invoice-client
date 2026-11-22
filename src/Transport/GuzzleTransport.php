@@ -1,16 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Invoice\Transport;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ServerException;
-use Symfony\Component\Config\Definition\Exception\Exception;
+use Invoice\Exception;
 
 class GuzzleTransport implements TransportInterface
 {
-    const TIMEOUT = 10;
+    public const TIMEOUT = 10;
 
-    public function call($url, $apiKey, $payload, $method = 'post')
+    /**
+     * @throws GuzzleException on network errors and 4xx responses
+     * @throws Exception for unsupported HTTP methods
+     */
+    public function call(string $url, string $apiKey, ?string $payload, string $method = 'post'): ?Result
     {
         $headers = [
             'headers' => [
@@ -18,7 +25,7 @@ class GuzzleTransport implements TransportInterface
             ],
         ];
 
-        if ($payload) {
+        if ($payload !== null && $payload !== '') {
             $headers['body'] = $payload;
         }
 
@@ -26,15 +33,16 @@ class GuzzleTransport implements TransportInterface
             'timeout' => self::TIMEOUT,
         ]);
 
-        if ($method == 'post') {
+        if ($method === 'post') {
             try {
                 $response = $client->post($url, $headers);
             } catch (ServerException $error) {
-                echo $error->getResponse()->getBody() . "\n";
-                return new Result(500, $error->getResponse()->getBody());
+                $body = (string) $error->getResponse()->getBody();
+                echo $body . "\n";
+                return new Result(500, $body);
             }
 
-            return new Result($response->getStatusCode(), $response->getBody());
+            return new Result($response->getStatusCode(), (string) $response->getBody());
         }
         throw new Exception('error - treba osetri');
     }

@@ -5,13 +5,14 @@ In development mode.
 
 
 
-[![Build Status](https://travis-ci.org/tomaj/invoice-client.svg)](http://travis-ci.org/tomaj/invoice-client)
-[![Code Climate](https://codeclimate.com/github/tomaj/invoice-client/badges/gpa.svg)](https://codeclimate.com/github/tomaj/invoice-client)
-[![Test Coverage](https://codeclimate.com/github/tomaj/invoice-client/badges/coverage.svg)](https://codeclimate.com/github/tomaj/invoice-client/coverage)
-[![Dependency Status](https://www.versioneye.com/user/projects/558c6fbc653232001e000687/badge.svg?style=flat)](https://www.versioneye.com/user/projects/558c6fbc653232001e000687)
+[![CI](https://github.com/tomaj/invoice-client/actions/workflows/ci.yml/badge.svg)](https://github.com/tomaj/invoice-client/actions/workflows/ci.yml)
+[![Latest Stable Version](https://poser.pugx.org/tomaj/invoice-client/v/stable)](https://packagist.org/packages/tomaj/invoice-client)
 
-[![Latest Stable Version](https://poser.pugx.org/tomaj/invoice-client/v/stable)](https://packagist.org/packages/tomaj/csv-processor)
 
+Requirements
+------------
+
+PHP 8.3 or newer.
 
 Basic usage
 -----------

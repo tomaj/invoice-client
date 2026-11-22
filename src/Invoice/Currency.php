@@ -1,18 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Invoice;
 
 class Currency
 {
-    const EUR = 'EUR';
-    const USD = 'USD';
-    const CZK = 'CZK';
-    const GBP = 'GBP';
-    const HUF = 'HUF';
-    const PLN = 'PLN';
-    const RUB = 'RUB';
+    public const EUR = 'EUR';
+    public const USD = 'USD';
+    public const CZK = 'CZK';
+    public const GBP = 'GBP';
+    public const HUF = 'HUF';
+    public const PLN = 'PLN';
+    public const RUB = 'RUB';
 
-    public static function isValid($currency)
+    public static function isValid(mixed $currency): bool
     {
         return in_array($currency, [
             self::EUR,
@@ -22,6 +24,6 @@ class Currency
             self::HUF,
             self::PLN,
             self::RUB,
-        ]);
+        ], true);
     }
 }
