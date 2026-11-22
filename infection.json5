@@ -1,0 +1,28 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "src"
+        ]
+    },
+    "logs": {
+        "text": "build/infection.log",
+        "html": "build/infection.html",
+        "summary": "build/infection-summary.log",
+        "json": "build/infection.json"
+    },
+    "mutators": {
+        "@default": true,
+        // the mutant sets a null body for a null payload; Guzzle sends a null body and no body the same way
+        "NotIdentical": {
+            "ignore": [
+                "Tomaj\\InvoiceClient\\Transport\\GuzzleTransport::call"
+            ]
+        }
+    },
+    "minMsi": 95,
+    "minCoveredMsi": 95,
+    "phpUnit": {
+        "configDir": "."
+    }
+}
