@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Invoice;
+namespace Tomaj\InvoiceClient\Invoice;
 
-class Address
+final class Address
 {
     use ArrayReader;
 

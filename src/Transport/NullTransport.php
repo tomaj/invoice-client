@@ -2,11 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Invoice\Transport;
+namespace Tomaj\InvoiceClient\Transport;
 
-class NullTransport implements TransportInterface
+/**
+ * Sends nothing. Every API call returns a response with status code 0 and isOk() === false.
+ */
+final class NullTransport implements TransportInterface
 {
-    public function call(string $url, string $apiKey, ?string $payload, string $method = 'post'): ?Result
+    #[\Override]
+    public function call(HttpMethod $method, string $url, string $apiToken, ?string $payload = null): ?Result
     {
         return null;
     }

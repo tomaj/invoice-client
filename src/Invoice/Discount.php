@@ -2,47 +2,53 @@
 
 declare(strict_types=1);
 
-namespace Invoice;
+namespace Tomaj\InvoiceClient\Invoice;
 
-class Discount
+use Tomaj\InvoiceClient\Exception\InvalidValueException;
+
+/**
+ * A discount of an invoice item or of the whole invoice.
+ */
+final readonly class Discount
 {
     use ArrayReader;
-
-    private string $type;
 
     /** @var int|float|numeric-string */
     private int|float|string $value;
 
     /**
      * @param int|float|string $value a number or a numeric string, sent to the API as given
-     * @throws \InvalidArgumentException for a non-numeric string
+     * @throws InvalidValueException for a non-numeric string
      */
-    public function __construct(string $type, int|float|string $value)
-    {
-        $this->type = $type;
-        $this->value = self::numeric($value, 'value') ?? 0;
+    public function __construct(
+        private DiscountType $type,
+        int|float|string $value,
+    ) {
+        if (is_string($value) && !is_numeric($value)) {
+            throw new InvalidValueException(sprintf("value must be a number or a numeric string, '%s' given", $value));
+        }
+        $this->value = $value;
     }
 
     /**
+     * Reads "type" ("none", "percent" or "flat"; "none" when missing) and "value" (sent as a float).
+     *
      * @param array<mixed> $data
+     * @throws InvalidValueException for an unknown discount type
      */
     public static function fromArray(array $data): Discount
     {
+        $type = self::readString($data, 'type') ?? DiscountType::None->value;
+
         return new Discount(
-            self::readString($data, 'type') ?? 'none',
+            DiscountType::tryFrom($type) ?? throw new InvalidValueException(sprintf("Unknown discount type '%s'", $type)),
             (float) (self::readNumber($data, 'value') ?? 0),
         );
     }
 
-    public function getType(): string
+    public function getType(): DiscountType
     {
         return $this->type;
-    }
-
-    public function setType(string $type): Discount
-    {
-        $this->type = $type;
-        return $this;
     }
 
     /**
@@ -51,15 +57,5 @@ class Discount
     public function getValue(): int|float|string
     {
         return $this->value;
-    }
-
-    /**
-     * @param int|float|string $value a number or a numeric string, sent to the API as given
-     * @throws \InvalidArgumentException for a non-numeric string
-     */
-    public function setValue(int|float|string $value): Discount
-    {
-        $this->value = self::numeric($value, 'value') ?? 0;
-        return $this;
     }
 }

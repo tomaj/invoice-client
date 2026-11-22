@@ -2,16 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Invoice;
+namespace Tomaj\InvoiceClient\Test;
 
-use Invoice\Transport\Result;
-use Invoice\Transport\TestTransport;
 use PHPUnit\Framework\TestCase;
+use Tomaj\InvoiceClient\Invoice\Address;
+use Tomaj\InvoiceClient\Invoice\Client;
+use Tomaj\InvoiceClient\Invoice\Discount;
+use Tomaj\InvoiceClient\Invoice\DiscountType;
+use Tomaj\InvoiceClient\Invoice\Invoice;
+use Tomaj\InvoiceClient\Invoice\InvoiceItem;
+use Tomaj\InvoiceClient\InvoiceApi;
+use Tomaj\InvoiceClient\Transport\Result;
+use Tomaj\InvoiceClient\Transport\TestTransport;
 
 /**
  * Numbers and codes are sent to the API exactly as the caller gave them (as in 1.x).
  */
-class PayloadTypesTest extends TestCase
+final class PayloadTypesTest extends TestCase
 {
     /**
      * @return array<mixed>
@@ -19,9 +26,9 @@ class PayloadTypesTest extends TestCase
     private function send(Invoice $invoice): array
     {
         $transport = new TestTransport();
-        $transport->setResponse(new Result(200, '{"status":"ok"}'));
-        (new InvoiceApi('token', ['transport' => $transport]))->createInvoice($invoice);
-        $payload = $transport->getPayload();
+        $transport->addResponse(new Result(200, '{"status":"ok"}'));
+        new InvoiceApi('token', transport: $transport)->createInvoice($invoice);
+        $payload = $transport->getLastRequest()['payload'] ?? null;
         self::assertNotNull($payload);
         $data = json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
         self::assertIsArray($data);
@@ -32,15 +39,15 @@ class PayloadTypesTest extends TestCase
 
     public function testSettersAcceptNumericStringsAndIntCodes(): void
     {
-        $invoice = (new Invoice())
+        $invoice = new Invoice()
             ->setNumber(2015001)
             ->setVariableSymbol(123213)
             ->setConstantSymbol('0308')
             ->setPrice('12.30')
             ->setPriceTotal(14.76)
-            ->setClient((new Client())->setTaxNumber(2020)->setAddress((new Address())->setZip(81101)->setFax('555')))
-            ->setDiscount(new Discount('percent', '5'))
-            ->addItem((new InvoiceItem())->setQuantity('2')->setVat(20)->setPriceItem('6.15'));
+            ->setClient(new Client()->setTaxNumber(2020)->setAddress(new Address()->setZip(81101)->setFax('555')))
+            ->setDiscount(new Discount(DiscountType::Percent, '5'))
+            ->addItem(new InvoiceItem()->setQuantity('2')->setVat(20)->setPriceItem('6.15'));
 
         $data = $this->send($invoice);
 
@@ -80,18 +87,18 @@ class PayloadTypesTest extends TestCase
     public function testNonNumericPriceIsRejected(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        (new Invoice())->setPrice('12,30');
+        new Invoice()->setPrice('12,30');
     }
 
     public function testNonNumericDiscountIsRejected(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        new Discount('percent', 'ten');
+        new Discount(DiscountType::Percent, 'ten');
     }
 
     public function testSetItemsIsChainable(): void
     {
-        $data = $this->send((new Invoice())->setItems([(new InvoiceItem())->setPrice(1)])->setName('x'));
+        $data = $this->send(new Invoice()->setItems([new InvoiceItem()->setPrice(1)])->setName('x'));
 
         self::assertSame('x', $data['name']);
         self::assertIsArray($data['items']);

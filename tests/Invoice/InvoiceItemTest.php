@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Invoice;
+namespace Tomaj\InvoiceClient\Test\Invoice;
 
 use PHPUnit\Framework\TestCase;
+use Tomaj\InvoiceClient\Invoice\InvoiceItem;
 
-class InvoiceItemTest extends TestCase
+final class InvoiceItemTest extends TestCase
 {
     public function testCreateInvoiceItem(): void
     {

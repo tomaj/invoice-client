@@ -1,50 +1,73 @@
-Invoice client
-==============
+# Invoice Client
 
-In development mode.
+**PHP client for the [chcemfakturu.sk](https://chcemfakturu.sk) invoicing API: create, fetch and delete invoices.**
 
+**Documentation: https://tomaj.github.io/invoice-client/**
 
+[Getting started](https://tomaj.github.io/invoice-client/guide/getting-started) · [Building invoices](https://tomaj.github.io/invoice-client/guide/invoices) · [API reference](https://tomaj.github.io/invoice-client/api/reference) · [Changelog](https://tomaj.github.io/invoice-client/changelog)
 
-[![CI](https://github.com/tomaj/invoice-client/actions/workflows/ci.yml/badge.svg)](https://github.com/tomaj/invoice-client/actions/workflows/ci.yml)
-[![Latest Stable Version](https://poser.pugx.org/tomaj/invoice-client/v/stable)](https://packagist.org/packages/tomaj/invoice-client)
+[![Latest Stable Version](https://img.shields.io/packagist/v/tomaj/invoice-client.svg)](https://packagist.org/packages/tomaj/invoice-client)
+[![CI](https://github.com/tomaj/invoice-client/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/tomaj/invoice-client/actions/workflows/ci.yml?query=branch%3Amaster)
+[![Coverage Status](https://coveralls.io/repos/github/tomaj/invoice-client/badge.svg?branch=master)](https://coveralls.io/github/tomaj/invoice-client?branch=master)
+[![PHPStan](https://img.shields.io/badge/PHPStan-level%20max-brightgreen.svg)](https://phpstan.org/)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/tomaj/invoice-client/badge)](https://scorecard.dev/viewer/?uri=github.com/tomaj/invoice-client)
+[![Documentation](https://img.shields.io/badge/docs-1.x-4f46e5.svg)](https://tomaj.github.io/invoice-client/)
+[![License](https://img.shields.io/packagist/l/tomaj/invoice-client.svg)](LICENSE.md)
+[![PHP Version](https://img.shields.io/badge/php-%5E8.4-777bb4.svg)](https://www.php.net/)
 
+## What is invoice-client?
 
-Requirements
-------------
+A small, typed PHP client for the chcemfakturu.sk API:
 
-PHP 8.3 or newer.
+- build invoices with items, client, addresses and discounts (fluent setters or `fromArray()`),
+- create, fetch and delete invoices, and build links to their HTML and PDF versions,
+- get every API answer as a response object with the status, the error message and the raw body,
+- test your integration without the network (`TestTransport`) and log requests through any PSR-3 logger.
 
-Basic usage
------------
+## Installation
+
+Requires PHP 8.4 or newer.
+
+```bash
+composer require tomaj/invoice-client
+```
+
+No version is tagged yet: until 1.0.0 is released, require `tomaj/invoice-client:dev-master`. If you used `dev-master` with the old `Invoice\` namespace, see [UPGRADE-1.0.md](UPGRADE-1.0.md).
+
+## Usage
 
 ```php
+use Tomaj\InvoiceClient\Invoice\Currency;
+use Tomaj\InvoiceClient\Invoice\Invoice;
+use Tomaj\InvoiceClient\Invoice\InvoiceItem;
+use Tomaj\InvoiceClient\InvoiceApi;
 
-use Invoice\InvoiceApi;
-use Invoice\Invoice;
-use Invoice\InvoiceItem;
+$api = new InvoiceApi((string) getenv('CHCEMFAKTURU_API_TOKEN'));
 
-$invoiceApi = new InvoiceApi('*APIKEY*');
+$invoice = new Invoice()
+    ->setName('Invoice 2024001')
+    ->setCurrency(Currency::EUR)
+    ->addItem(new InvoiceItem()->setDescription('Consulting')->setQuantity(10)->setPrice('40.00')->setVat(20));
 
-$invoiceItem = new InvoiceItem();
-$invoiceItem
-    ->setQuantity(10)
-    ->setPrice(2.4)
-    ->setVat(20);
+$response = $api->createInvoice($invoice);
 
-$invoice = new Invoice();
-$invoice
-    ->setName('Invoice 12323')
-    ->setDescription('invoice description...')
-    ->addItem($invoiceItem);
-    // there are other method to set invoice properties... 
-
-$result = $invoiceApi->createInvoice($invoice);
-
-if ($result->isOK()) {
-    echo "Download pdf: " . $result->getDownloadUrl() . "\n";
-    echo "Online HTML version:" . $result->getHtmlUrl() . "\n";
+if ($response->isOk()) {
+    echo 'PDF: ' . $response->getDownloadUrl() . "\n";
 } else {
-    echo "Error: " . $result->getErrorMessage() . "\n";
+    echo 'Error ' . $response->getStatusCode() . ': ' . $response->getErrorMessage() . "\n";
 }
-
 ```
+
+All invoice fields, `getInvoice()` / `deleteInvoice()`, error handling, logging, timeouts and testing are described in the **[documentation](https://tomaj.github.io/invoice-client/)**.
+
+## Contributing
+
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## Security
+
+Do not report security vulnerabilities in public issues. See [SECURITY.md](SECURITY.md), which also covers handling of the API token.
+
+## License
+
+MIT. See [LICENSE.md](LICENSE.md).

@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Invoice;
+namespace Tomaj\InvoiceClient\Invoice;
+
+use Tomaj\InvoiceClient\Exception\InvalidValueException;
 
 /**
  * Reads typed values from the loosely typed arrays given to fromArray()
@@ -79,12 +81,12 @@ trait ArrayReader
 
     /**
      * @return int|float|numeric-string|null
-     * @throws \InvalidArgumentException for a non-numeric string
+     * @throws InvalidValueException for a non-numeric string
      */
     private static function numeric(int|float|string|null $value, string $field): int|float|string|null
     {
         if (is_string($value) && !is_numeric($value)) {
-            throw new \InvalidArgumentException(sprintf("%s must be a number or a numeric string, '%s' given", $field, $value));
+            throw new InvalidValueException(sprintf("%s must be a number or a numeric string, '%s' given", $field, $value));
         }
 
         return $value;

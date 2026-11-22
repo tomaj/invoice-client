@@ -2,27 +2,30 @@
 
 declare(strict_types=1);
 
-namespace Invoice;
+namespace Tomaj\InvoiceClient\Test;
 
-use Invoice\Transport\Result;
-use Invoice\Transport\TestTransport;
 use PHPUnit\Framework\TestCase;
+use Tomaj\InvoiceClient\Invoice\Discount;
+use Tomaj\InvoiceClient\Invoice\DiscountType;
+use Tomaj\InvoiceClient\Invoice\Invoice;
+use Tomaj\InvoiceClient\Invoice\InvoiceItem;
+use Tomaj\InvoiceClient\InvoiceApi;
+use Tomaj\InvoiceClient\Transport\Result;
+use Tomaj\InvoiceClient\Transport\TestTransport;
 
-class CreateInvoiceApiTest extends TestCase
+final class CreateInvoiceApiTest extends TestCase
 {
     public function testCreateInvoiceItem(): void
     {
         $transport = new TestTransport();
-        $invoiceApi = new InvoiceApi('941240975320975', [
-            'transport' => $transport,
-        ]);
+        $invoiceApi = new InvoiceApi('941240975320975', transport: $transport);
         $invoice = new Invoice();
         $invoiceItem = new InvoiceItem();
         $invoiceItem
             ->setQuantity(2)
             ->setPrice(2.3)
             ->setVat(20)
-            ->setDiscount(new Discount('percent', 20));
+            ->setDiscount(new Discount(DiscountType::Percent, 20));
         $invoice
             ->setNumber('200011')
             ->setName('Invoice 200011')
@@ -32,12 +35,12 @@ class CreateInvoiceApiTest extends TestCase
 
         $dummyResponse = '{"status": "ok", "id": "231r08iyfouihg3rt3r", "download_pdf_url": "http://download.com/", "html_url": "http://html.com/"}';
         $result = new Result(200, $dummyResponse);
-        $transport->setResponse($result);
+        $transport->addResponse($result);
 
         $result = $invoiceApi->createInvoice($invoice);
 
         // check what client sent
-        $payload = $transport->getPayload();
+        $payload = $transport->getLastRequest()['payload'] ?? null;
         self::assertNotNull($payload);
         self::assertJsonStringEqualsJsonString(json_encode(['invoice' => [
             'id' => null,
@@ -70,20 +73,18 @@ class CreateInvoiceApiTest extends TestCase
         ]], JSON_THROW_ON_ERROR), $payload);
 
         // check what client read
-        self::assertEquals('231r08iyfouihg3rt3r', $result->getId());
-        self::assertEquals('http://download.com/', $result->getDownloadUrl());
-        self::assertEquals('http://html.com/', $result->getHtmlUrl());
+        self::assertSame('231r08iyfouihg3rt3r', $result->getId());
+        self::assertSame('http://download.com/', $result->getDownloadUrl());
+        self::assertSame('http://html.com/', $result->getHtmlUrl());
     }
 
     public function testCreateInvoiceErrorResponse(): void
     {
         $transport = new TestTransport();
-        $invoiceApi = new InvoiceApi('941240975320975', [
-            'transport' => $transport,
-        ]);
-        $transport->setResponse(new Result(400, '{"status": "error", "message": "Invalid invoice"}'));
+        $invoiceApi = new InvoiceApi('941240975320975', transport: $transport);
+        $transport->addResponse(new Result(400, '{"status": "error", "message": "Invalid invoice"}'));
 
-        $result = $invoiceApi->createInvoice((new Invoice())->setName('Invoice 1'));
+        $result = $invoiceApi->createInvoice(new Invoice()->setName('Invoice 1'));
 
         self::assertFalse($result->isOk());
         self::assertSame('Invalid invoice', $result->getErrorMessage());
@@ -93,35 +94,14 @@ class CreateInvoiceApiTest extends TestCase
     public function testCreateInvoiceUnparsableResponse(): void
     {
         $transport = new TestTransport();
-        $invoiceApi = new InvoiceApi('941240975320975', [
-            'transport' => $transport,
-        ]);
-        $transport->setResponse(new Result(500, 'Internal Server Error'));
+        $invoiceApi = new InvoiceApi('941240975320975', transport: $transport);
+        $transport->addResponse(new Result(500, 'Internal Server Error'));
 
         $result = $invoiceApi->createInvoice(new Invoice());
 
         self::assertFalse($result->isOk());
-        self::assertSame('Cannot parse response from server', $result->getErrorMessage());
+        self::assertSame('Cannot parse response from server (HTTP 500)', $result->getErrorMessage());
+        self::assertSame(500, $result->getStatusCode());
+        self::assertSame('Internal Server Error', $result->getBody());
     }
-
-    //    public function testGetInvoice(): void
-    //    {
-    //        $transport = new TestTransport();
-    //        $invoiceApi = new InvoiceApi('941240975320975', [
-    //            'transport' => $transport,
-    //        ]);
-    //
-    //        $result = $invoiceApi->getInvoice('sadoywaf08yesfo8ysgreg');
-    //
-    //    }
-    //
-    //    public function testDeleteInvoice(): void
-    //    {
-    //        $transport = new TestTransport();
-    //        $invoiceApi = new InvoiceApi('941240975320975', [
-    //            'transport' => $transport,
-    //        ]);
-    //
-    //        $result = $invoiceApi->deleteInvoice('sadoywaf08yesfo8ysgreg');
-    //    }
 }

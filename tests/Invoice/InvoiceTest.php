@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Invoice;
+namespace Tomaj\InvoiceClient\Test\Invoice;
 
-use Invoice\Exception\UnsupportedCurrencyException;
 use PHPUnit\Framework\TestCase;
+use Tomaj\InvoiceClient\Exception\UnsupportedCurrencyException;
+use Tomaj\InvoiceClient\Invoice\Currency;
+use Tomaj\InvoiceClient\Invoice\Invoice;
 
-class InvoiceTest extends TestCase
+final class InvoiceTest extends TestCase
 {
     public function testCreateInvoice(): void
     {
@@ -42,19 +44,19 @@ class InvoiceTest extends TestCase
         ]);
 
         self::assertEquals('20150001', $invoice->getNumber());
-        self::assertEquals('Invoice 1', $invoice->getName());
+        self::assertSame('Invoice 1', $invoice->getName());
         self::assertEquals('asfd09iu23oiht3209itgh4eio3ht', $invoice->getId());
-        self::assertEquals('14.5.2015', $invoice->getCreated());
-        self::assertEquals('13.5.2015', $invoice->getDelivered());
-        self::assertEquals('29.5.2015', $invoice->getDue());
-        self::assertEquals('paid', $invoice->getStatus());
-        self::assertEquals('CZK', $invoice->getCurrency());
+        self::assertSame('14.5.2015', $invoice->getCreated());
+        self::assertSame('13.5.2015', $invoice->getDelivered());
+        self::assertSame('29.5.2015', $invoice->getDue());
+        self::assertSame('paid', $invoice->getStatus());
+        self::assertSame(Currency::CZK, $invoice->getCurrency());
 
-        self::assertEquals('asfsaf@asdsad.sk', $invoice->getShippingAddress()?->getEmail());
+        self::assertSame('asfsaf@asdsad.sk', $invoice->getShippingAddress()?->getEmail());
 
         $client = $invoice->getClient();
         self::assertNotNull($client);
-        self::assertEquals('Albert Albert', $client->getName());
+        self::assertSame('Albert Albert', $client->getName());
         self::assertEquals('124321 32 32', $client->getAddress()?->getTel());
 
         $items = $invoice->getItems();

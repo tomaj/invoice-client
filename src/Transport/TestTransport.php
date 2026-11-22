@@ -2,52 +2,55 @@
 
 declare(strict_types=1);
 
-namespace Invoice\Transport;
+namespace Tomaj\InvoiceClient\Transport;
 
-class TestTransport implements TransportInterface
+/**
+ * A transport for your tests: records the requests and returns the responses you queue.
+ *
+ * Without a queued response, call() returns null, like NullTransport.
+ */
+final class TestTransport implements TransportInterface
 {
-    private ?Result $response = null;
+    /** @var list<Result> */
+    private array $responses = [];
 
-    private ?string $url = null;
+    /** @var list<array{method: HttpMethod, url: string, apiToken: string, payload: string|null}> */
+    private array $requests = [];
 
-    private ?string $apikey = null;
-
-    private ?string $payload = null;
-
-    private ?string $method = null;
-
-    public function setResponse(Result $response): void
+    /**
+     * Queues a response for the next call.
+     */
+    public function addResponse(Result $response): self
     {
-        $this->response = $response;
+        $this->responses[] = $response;
+        return $this;
     }
 
-    public function getUrl(): ?string
+    /**
+     * Every request sent so far, oldest first.
+     *
+     * @return list<array{method: HttpMethod, url: string, apiToken: string, payload: string|null}>
+     */
+    public function getRequests(): array
     {
-        return $this->url;
+        return $this->requests;
     }
 
-    public function getApiKey(): ?string
+    /**
+     * The last request, or null before the first one.
+     *
+     * @return array{method: HttpMethod, url: string, apiToken: string, payload: string|null}|null
+     */
+    public function getLastRequest(): ?array
     {
-        return $this->apikey;
+        return $this->requests === [] ? null : $this->requests[array_key_last($this->requests)];
     }
 
-    public function getPayload(): ?string
+    #[\Override]
+    public function call(HttpMethod $method, string $url, string $apiToken, ?string $payload = null): ?Result
     {
-        return $this->payload;
-    }
+        $this->requests[] = ['method' => $method, 'url' => $url, 'apiToken' => $apiToken, 'payload' => $payload];
 
-    public function getMethod(): ?string
-    {
-        return $this->method;
-    }
-
-    public function call(string $url, string $apiKey, ?string $payload, string $method = 'post'): ?Result
-    {
-        $this->url = $url;
-        $this->apikey = $apiKey;
-        $this->payload = $payload;
-        $this->method = $method;
-
-        return $this->response;
+        return array_shift($this->responses);
     }
 }

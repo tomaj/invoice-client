@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Invoice;
+namespace Tomaj\InvoiceClient\Invoice;
 
-use Invoice\Exception\UnsupportedCurrencyException;
+use Tomaj\InvoiceClient\Exception\InvalidValueException;
+use Tomaj\InvoiceClient\Exception\UnsupportedCurrencyException;
+use Tomaj\InvoiceClient\Exception\UnsupportedDiscountException;
 
-class Invoice
+final class Invoice
 {
     use ArrayReader;
 
@@ -42,7 +44,7 @@ class Invoice
 
     private ?Client $client = null;
 
-    private ?string $currency = null;
+    private ?Currency $currency = null;
 
     /** @var list<InvoiceItem> */
     private array $items = [];
@@ -118,10 +120,10 @@ class Invoice
         }
         if (isset($data['currency'])) {
             $currency = $data['currency'];
-            if (!is_string($currency) || !Currency::isValid($currency)) {
-                throw new UnsupportedCurrencyException(sprintf("Unsupported currency '%s'", is_scalar($currency) ? $currency : get_debug_type($currency)));
-            }
-            $invoice->setCurrency($currency);
+            $invoice->setCurrency(
+                $currency instanceof Currency ? $currency : (is_string($currency) ? Currency::tryFrom($currency) : null)
+                    ?? throw new UnsupportedCurrencyException(sprintf("Unsupported currency '%s'", is_string($currency) || is_int($currency) ? $currency : get_debug_type($currency))),
+            );
         }
         foreach (self::readArray($data, 'items') ?? [] as $item) {
             if (is_array($item)) {
@@ -255,7 +257,7 @@ class Invoice
 
     /**
      * @param int|float|string|null $price a number or a numeric string, sent to the API as given
-     * @throws \InvalidArgumentException for a non-numeric string
+     * @throws InvalidValueException for a non-numeric string
      */
     public function setPrice(int|float|string|null $price): Invoice
     {
@@ -273,7 +275,7 @@ class Invoice
 
     /**
      * @param int|float|string|null $priceTotal a number or a numeric string, sent to the API as given
-     * @throws \InvalidArgumentException for a non-numeric string
+     * @throws InvalidValueException for a non-numeric string
      */
     public function setPriceTotal(int|float|string|null $priceTotal): Invoice
     {
@@ -314,12 +316,12 @@ class Invoice
         return $this;
     }
 
-    public function getCurrency(): ?string
+    public function getCurrency(): ?Currency
     {
         return $this->currency;
     }
 
-    public function setCurrency(?string $currency): Invoice
+    public function setCurrency(?Currency $currency): Invoice
     {
         $this->currency = $currency;
         return $this;
@@ -354,12 +356,12 @@ class Invoice
     }
 
     /**
-     * @throws Exception when a flat discount is given
+     * @throws UnsupportedDiscountException for a flat discount: add an item with a negative price instead
      */
     public function setDiscount(Discount $discount): Invoice
     {
-        if ($discount->getType() === 'flat') {
-            throw new Exception('Flat discount is unsupported for invoice. Add new item with negative price for flat discount.');
+        if ($discount->getType() === DiscountType::Flat) {
+            throw new UnsupportedDiscountException('Flat discount is unsupported for invoice. Add new item with negative price for flat discount.');
         }
         $this->discount = $discount;
         return $this;

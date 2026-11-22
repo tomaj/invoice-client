@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Invoice;
+namespace Tomaj\InvoiceClient\Invoice;
 
-class InvoiceItem
+use Tomaj\InvoiceClient\Exception\InvalidValueException;
+
+final class InvoiceItem
 {
     use ArrayReader;
 
@@ -74,7 +76,7 @@ class InvoiceItem
 
     /**
      * @param int|float|string|null $quantity a number or a numeric string, sent to the API as given
-     * @throws \InvalidArgumentException for a non-numeric string
+     * @throws InvalidValueException for a non-numeric string
      */
     public function setQuantity(int|float|string|null $quantity): InvoiceItem
     {
@@ -92,7 +94,7 @@ class InvoiceItem
 
     /**
      * @param int|float|string|null $vat a number or a numeric string, sent to the API as given
-     * @throws \InvalidArgumentException for a non-numeric string
+     * @throws InvalidValueException for a non-numeric string
      */
     public function setVat(int|float|string|null $vat): InvoiceItem
     {
@@ -110,7 +112,7 @@ class InvoiceItem
 
     /**
      * @param int|float|string|null $priceItem a number or a numeric string, sent to the API as given
-     * @throws \InvalidArgumentException for a non-numeric string
+     * @throws InvalidValueException for a non-numeric string
      */
     public function setPriceItem(int|float|string|null $priceItem): InvoiceItem
     {
@@ -128,7 +130,7 @@ class InvoiceItem
 
     /**
      * @param int|float|string|null $price a number or a numeric string, sent to the API as given
-     * @throws \InvalidArgumentException for a non-numeric string
+     * @throws InvalidValueException for a non-numeric string
      */
     public function setPrice(int|float|string|null $price): InvoiceItem
     {
@@ -146,7 +148,7 @@ class InvoiceItem
 
     /**
      * @param int|float|string|null $priceTotal a number or a numeric string, sent to the API as given
-     * @throws \InvalidArgumentException for a non-numeric string
+     * @throws InvalidValueException for a non-numeric string
      */
     public function setPriceTotal(int|float|string|null $priceTotal): InvoiceItem
     {

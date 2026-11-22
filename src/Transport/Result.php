@@ -2,19 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Invoice\Transport;
+namespace Tomaj\InvoiceClient\Transport;
 
-class Result
+/**
+ * The HTTP status code and body of one API response.
+ */
+final readonly class Result
 {
-    private int $code;
-
-    private string $body;
-
-    public function __construct(int $code, string $body)
-    {
-        $this->code = $code;
-        $this->body = $body;
-    }
+    public function __construct(
+        private int $code,
+        private string $body,
+    ) {}
 
     public function getCode(): int
     {

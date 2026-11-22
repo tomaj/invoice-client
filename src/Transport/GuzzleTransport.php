@@ -2,20 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Invoice\Transport;
+namespace Tomaj\InvoiceClient\Transport;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Exception\ServerException;
-use Invoice\Exception;
+use Tomaj\InvoiceClient\Exception\TransportException;
 
-class GuzzleTransport implements TransportInterface
+/**
+ * Sends the requests with Guzzle. The default transport of InvoiceApi.
+ */
+final readonly class GuzzleTransport implements TransportInterface
 {
-    public const TIMEOUT = 10;
+    /** Timeout of the default client, in seconds. */
+    public const int TIMEOUT = 10;
 
     private ClientInterface $client;
 
+    /**
+     * @param ClientInterface|null $client your own configured client; without one a client with a 10 second timeout is created
+     */
     public function __construct(?ClientInterface $client = null)
     {
         $this->client = $client ?? new Client([
@@ -24,32 +30,28 @@ class GuzzleTransport implements TransportInterface
     }
 
     /**
-     * Server errors (5xx) are returned as a Result with the response body, so the caller can read the error message.
-     *
-     * @throws GuzzleException on network errors and 4xx responses
-     * @throws Exception for unsupported HTTP methods
+     * Every HTTP response is returned as a Result, 4xx and 5xx included, so the caller can read the API error.
      */
-    public function call(string $url, string $apiKey, ?string $payload, string $method = 'post'): ?Result
+    #[\Override]
+    public function call(HttpMethod $method, string $url, string $apiToken, ?string $payload = null): Result
     {
         $options = [
             'headers' => [
-                'Authorization' => 'Bearer ' . $apiKey,
+                'Authorization' => 'Bearer ' . $apiToken,
             ],
+            'http_errors' => false,
         ];
 
-        if ($payload !== null && $payload !== '') {
+        if (($payload ?? '') !== '') {
             $options['body'] = $payload;
         }
 
-        if ($method === 'post') {
-            try {
-                $response = $this->client->request('POST', $url, $options);
-            } catch (ServerException $error) {
-                $response = $error->getResponse();
-            }
-
-            return new Result($response->getStatusCode(), (string) $response->getBody());
+        try {
+            $response = $this->client->request($method->value, $url, $options);
+        } catch (GuzzleException $e) {
+            throw new TransportException(sprintf('%s %s failed: %s', $method->value, $url, $e->getMessage()), 0, $e);
         }
-        throw new Exception(sprintf("HTTP method '%s' is not supported by %s", $method, self::class));
+
+        return new Result($response->getStatusCode(), (string) $response->getBody());
     }
 }

@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Invoice;
+namespace Tomaj\InvoiceClient\Test\Invoice;
 
 use PHPUnit\Framework\TestCase;
+use Tomaj\InvoiceClient\Invoice\Client;
 
-class ClientTest extends TestCase
+final class ClientTest extends TestCase
 {
     public function testCreateClient(): void
     {
@@ -26,20 +27,20 @@ class ClientTest extends TestCase
                 'email' => 'sdsada@asdsads.com',
             ],
         ]);
-        self::assertEquals('test name', $item->getName());
-        self::assertEquals('company s.r.o', $item->getCompany());
+        self::assertSame('test name', $item->getName());
+        self::assertSame('company s.r.o', $item->getCompany());
         self::assertEquals('SK214098724', $item->getVatNumber());
         self::assertEquals('214098724', $item->getTaxNumber());
 
         $address = $item->getAddress();
         self::assertNotNull($address);
-        self::assertEquals('Local Street 245', $address->getStreet());
-        self::assertEquals('124/2142', $address->getStreet2());
+        self::assertSame('Local Street 245', $address->getStreet());
+        self::assertSame('124/2142', $address->getStreet2());
         self::assertEquals('23021', $address->getZip());
-        self::assertEquals('New York', $address->getCity());
-        self::assertEquals('USA', $address->getCountry());
+        self::assertSame('New York', $address->getCity());
+        self::assertSame('USA', $address->getCountry());
         self::assertEquals('+420 123 123 421', $address->getTel());
         self::assertEquals('325324324', $address->getFax());
-        self::assertEquals('sdsada@asdsads.com', $address->getEmail());
+        self::assertSame('sdsada@asdsads.com', $address->getEmail());
     }
 }

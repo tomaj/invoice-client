@@ -2,12 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Invoice;
+namespace Tomaj\InvoiceClient;
 
-class Serializer
+use Tomaj\InvoiceClient\Exception\SerializationException;
+use Tomaj\InvoiceClient\Invoice\Address;
+use Tomaj\InvoiceClient\Invoice\Client;
+use Tomaj\InvoiceClient\Invoice\Discount;
+use Tomaj\InvoiceClient\Invoice\DiscountType;
+use Tomaj\InvoiceClient\Invoice\Invoice;
+use Tomaj\InvoiceClient\Invoice\InvoiceItem;
+
+/**
+ * Encodes an invoice to the JSON request body of the API.
+ */
+final class Serializer
 {
     /**
-     * @throws \JsonException
+     * @throws SerializationException when the invoice cannot be encoded, for example because a text is not valid UTF-8
      */
     public function encodeInvoice(Invoice $invoice): string
     {
@@ -25,30 +36,32 @@ class Serializer
             'items' => $this->encodeItems($invoice->getItems()),
             'price' => $invoice->getPrice(),
             'price_total' => $invoice->getPriceTotal(),
-            'currency' => $invoice->getCurrency(),
+            'currency' => $invoice->getCurrency()?->value,
         ];
         $client = $invoice->getClient();
-        if ($client !== null) {
+        if ($client instanceof Client) {
             $data['client'] = $this->encodeClient($client);
         }
         $shippingAddress = $invoice->getShippingAddress();
-        if ($shippingAddress !== null) {
+        if ($shippingAddress instanceof Address) {
             $data['shipping_address'] = $this->encodeAddress($shippingAddress);
         }
-        $discount = $invoice->getDiscount();
-        if ($discount !== null && $discount->getType() !== 'none') {
-            $data['discount'] = [
-                'type' => $discount->getType(),
-                'value' => $discount->getValue(),
-            ];
+        $discount = $this->encodeDiscount($invoice->getDiscount());
+        if ($discount !== null) {
+            $data['discount'] = $discount;
         }
-        return json_encode(['invoice' => $data], JSON_THROW_ON_ERROR);
+
+        try {
+            return json_encode(['invoice' => $data], JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            throw new SerializationException('Cannot encode the invoice as JSON: ' . $e->getMessage(), 0, $e);
+        }
     }
 
     /**
      * @return array<string, mixed>
      */
-    public function encodeClient(Client $client): array
+    private function encodeClient(Client $client): array
     {
         $data = [
             'name' => $client->getName(),
@@ -58,7 +71,7 @@ class Serializer
             'tax_number' => $client->getTaxNumber(),
         ];
         $address = $client->getAddress();
-        if ($address !== null) {
+        if ($address instanceof Address) {
             $data['address'] = $this->encodeAddress($address);
         }
         return $data;
@@ -67,7 +80,7 @@ class Serializer
     /**
      * @return array<string, string|int|null>
      */
-    public function encodeAddress(Address $address): array
+    private function encodeAddress(Address $address): array
     {
         return [
             'street' => $address->getStreet(),
@@ -86,7 +99,7 @@ class Serializer
      * @param array<InvoiceItem> $items
      * @return list<array<string, mixed>>
      */
-    public function encodeItems(array $items): array
+    private function encodeItems(array $items): array
     {
         $result = [];
         foreach ($items as $item) {
@@ -98,12 +111,9 @@ class Serializer
                 'price' => $item->getPrice(),
                 'price_total' => $item->getPriceTotal(),
             ];
-            $discount = $item->getDiscount();
-            if ($discount !== null && $discount->getType() !== 'none') {
-                $row['discount'] = [
-                    'type' => $discount->getType(),
-                    'value' => $discount->getValue(),
-                ];
+            $discount = $this->encodeDiscount($item->getDiscount());
+            if ($discount !== null) {
+                $row['discount'] = $discount;
             }
             $result[] = $row;
         }
@@ -111,10 +121,17 @@ class Serializer
     }
 
     /**
-     * @throws \JsonException
+     * @return array{type: string, value: int|float|numeric-string}|null
      */
-    public function decodeInvoice(string $paylod): mixed
+    private function encodeDiscount(?Discount $discount): ?array
     {
-        return json_decode($paylod, true, 512, JSON_THROW_ON_ERROR);
+        if (!$discount instanceof Discount || $discount->getType() === DiscountType::None) {
+            return null;
+        }
+
+        return [
+            'type' => $discount->getType()->value,
+            'value' => $discount->getValue(),
+        ];
     }
 }
