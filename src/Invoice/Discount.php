@@ -10,12 +10,17 @@ class Discount
 
     private string $type;
 
-    private int|float $value;
+    /** @var int|float|numeric-string */
+    private int|float|string $value;
 
-    public function __construct(string $type, int|float $value)
+    /**
+     * @param int|float|string $value a number or a numeric string, sent to the API as given
+     * @throws \InvalidArgumentException for a non-numeric string
+     */
+    public function __construct(string $type, int|float|string $value)
     {
         $this->type = $type;
-        $this->value = $value;
+        $this->value = self::numeric($value, 'value') ?? 0;
     }
 
     /**
@@ -40,14 +45,21 @@ class Discount
         return $this;
     }
 
-    public function getValue(): int|float
+    /**
+     * @return int|float|numeric-string
+     */
+    public function getValue(): int|float|string
     {
         return $this->value;
     }
 
-    public function setValue(int|float $value): Discount
+    /**
+     * @param int|float|string $value a number or a numeric string, sent to the API as given
+     * @throws \InvalidArgumentException for a non-numeric string
+     */
+    public function setValue(int|float|string $value): Discount
     {
-        $this->value = $value;
+        $this->value = self::numeric($value, 'value') ?? 0;
         return $this;
     }
 }

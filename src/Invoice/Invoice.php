@@ -10,11 +10,11 @@ class Invoice
 {
     use ArrayReader;
 
-    private ?string $number = null;
+    private string|int|null $number = null;
 
     private ?string $name = null;
 
-    private ?string $id = null;
+    private string|int|null $id = null;
 
     private ?string $created = null;
 
@@ -26,13 +26,15 @@ class Invoice
 
     private ?string $description = null;
 
-    private ?string $variableSymbol = null;
+    private string|int|null $variableSymbol = null;
 
-    private ?string $constantSymbol = null;
+    private string|int|null $constantSymbol = null;
 
-    private int|float|null $price = null;
+    /** @var int|float|numeric-string|null */
+    private int|float|string|null $price = null;
 
-    private int|float|null $priceTotal = null;
+    /** @var int|float|numeric-string|null */
+    private int|float|string|null $priceTotal = null;
 
     private ?Address $shippingAddress = null;
 
@@ -54,7 +56,7 @@ class Invoice
     public static function fromArray(array $data): Invoice
     {
         $invoice = new Invoice();
-        $number = self::readString($data, 'number');
+        $number = self::readIdentifier($data, 'number');
         if ($number !== null) {
             $invoice->setNumber($number);
         }
@@ -62,7 +64,7 @@ class Invoice
         if ($name !== null) {
             $invoice->setName($name);
         }
-        $id = self::readString($data, 'id');
+        $id = self::readIdentifier($data, 'id');
         if ($id !== null) {
             $invoice->setId($id);
         }
@@ -86,11 +88,11 @@ class Invoice
         if ($description !== null) {
             $invoice->setDescription($description);
         }
-        $variableSymbol = self::readString($data, 'variable_symbol');
+        $variableSymbol = self::readIdentifier($data, 'variable_symbol');
         if ($variableSymbol !== null) {
             $invoice->setVariableSymbol($variableSymbol);
         }
-        $constantSymbol = self::readString($data, 'constant_symbol');
+        $constantSymbol = self::readIdentifier($data, 'constant_symbol');
         if ($constantSymbol !== null) {
             $invoice->setConstantSymbol($constantSymbol);
         }
@@ -133,12 +135,12 @@ class Invoice
         return $invoice;
     }
 
-    public function getNumber(): ?string
+    public function getNumber(): string|int|null
     {
         return $this->number;
     }
 
-    public function setNumber(?string $number): Invoice
+    public function setNumber(string|int|null $number): Invoice
     {
         $this->number = $number;
         return $this;
@@ -155,12 +157,12 @@ class Invoice
         return $this;
     }
 
-    public function getId(): ?string
+    public function getId(): string|int|null
     {
         return $this->id;
     }
 
-    public function setId(?string $id): Invoice
+    public function setId(string|int|null $id): Invoice
     {
         $this->id = $id;
         return $this;
@@ -221,47 +223,61 @@ class Invoice
         return $this;
     }
 
-    public function getVariableSymbol(): ?string
+    public function getVariableSymbol(): string|int|null
     {
         return $this->variableSymbol;
     }
 
-    public function setVariableSymbol(?string $variableSymbol): Invoice
+    public function setVariableSymbol(string|int|null $variableSymbol): Invoice
     {
         $this->variableSymbol = $variableSymbol;
         return $this;
     }
 
-    public function getConstantSymbol(): ?string
+    public function getConstantSymbol(): string|int|null
     {
         return $this->constantSymbol;
     }
 
-    public function setConstantSymbol(?string $constantSymbol): Invoice
+    public function setConstantSymbol(string|int|null $constantSymbol): Invoice
     {
         $this->constantSymbol = $constantSymbol;
         return $this;
     }
 
-    public function getPrice(): int|float|null
+    /**
+     * @return int|float|numeric-string|null
+     */
+    public function getPrice(): int|float|string|null
     {
         return $this->price;
     }
 
-    public function setPrice(int|float|null $price): Invoice
+    /**
+     * @param int|float|string|null $price a number or a numeric string, sent to the API as given
+     * @throws \InvalidArgumentException for a non-numeric string
+     */
+    public function setPrice(int|float|string|null $price): Invoice
     {
-        $this->price = $price;
+        $this->price = self::numeric($price, 'price');
         return $this;
     }
 
-    public function getPriceTotal(): int|float|null
+    /**
+     * @return int|float|numeric-string|null
+     */
+    public function getPriceTotal(): int|float|string|null
     {
         return $this->priceTotal;
     }
 
-    public function setPriceTotal(int|float|null $priceTotal): Invoice
+    /**
+     * @param int|float|string|null $priceTotal a number or a numeric string, sent to the API as given
+     * @throws \InvalidArgumentException for a non-numeric string
+     */
+    public function setPriceTotal(int|float|string|null $priceTotal): Invoice
     {
-        $this->priceTotal = $priceTotal;
+        $this->priceTotal = self::numeric($priceTotal, 'price_total');
         return $this;
     }
 

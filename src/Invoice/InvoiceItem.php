@@ -8,15 +8,20 @@ class InvoiceItem
 {
     use ArrayReader;
 
-    private int|float|null $quantity = null;
+    /** @var int|float|numeric-string|null */
+    private int|float|string|null $quantity = null;
 
-    private int|float|null $vat = null;
+    /** @var int|float|numeric-string|null */
+    private int|float|string|null $vat = null;
 
-    private int|float|null $priceItem = null;
+    /** @var int|float|numeric-string|null */
+    private int|float|string|null $priceItem = null;
 
-    private int|float|null $price = null;
+    /** @var int|float|numeric-string|null */
+    private int|float|string|null $price = null;
 
-    private int|float|null $priceTotal = null;
+    /** @var int|float|numeric-string|null */
+    private int|float|string|null $priceTotal = null;
 
     private ?string $description = null;
 
@@ -59,58 +64,93 @@ class InvoiceItem
         return $invoiceItem;
     }
 
-    public function getQuantity(): int|float|null
+    /**
+     * @return int|float|numeric-string|null
+     */
+    public function getQuantity(): int|float|string|null
     {
         return $this->quantity;
     }
 
-    public function setQuantity(int|float|null $quantity): InvoiceItem
+    /**
+     * @param int|float|string|null $quantity a number or a numeric string, sent to the API as given
+     * @throws \InvalidArgumentException for a non-numeric string
+     */
+    public function setQuantity(int|float|string|null $quantity): InvoiceItem
     {
-        $this->quantity = $quantity;
+        $this->quantity = self::numeric($quantity, 'quantity');
         return $this;
     }
 
-    public function getVat(): int|float|null
+    /**
+     * @return int|float|numeric-string|null
+     */
+    public function getVat(): int|float|string|null
     {
         return $this->vat;
     }
 
-    public function setVat(int|float|null $vat): InvoiceItem
+    /**
+     * @param int|float|string|null $vat a number or a numeric string, sent to the API as given
+     * @throws \InvalidArgumentException for a non-numeric string
+     */
+    public function setVat(int|float|string|null $vat): InvoiceItem
     {
-        $this->vat = $vat;
+        $this->vat = self::numeric($vat, 'vat');
         return $this;
     }
 
-    public function getPriceItem(): int|float|null
+    /**
+     * @return int|float|numeric-string|null
+     */
+    public function getPriceItem(): int|float|string|null
     {
         return $this->priceItem;
     }
 
-    public function setPriceItem(int|float|null $priceItem): InvoiceItem
+    /**
+     * @param int|float|string|null $priceItem a number or a numeric string, sent to the API as given
+     * @throws \InvalidArgumentException for a non-numeric string
+     */
+    public function setPriceItem(int|float|string|null $priceItem): InvoiceItem
     {
-        $this->priceItem = $priceItem;
+        $this->priceItem = self::numeric($priceItem, 'price_item');
         return $this;
     }
 
-    public function getPrice(): int|float|null
+    /**
+     * @return int|float|numeric-string|null
+     */
+    public function getPrice(): int|float|string|null
     {
         return $this->price;
     }
 
-    public function setPrice(int|float|null $price): InvoiceItem
+    /**
+     * @param int|float|string|null $price a number or a numeric string, sent to the API as given
+     * @throws \InvalidArgumentException for a non-numeric string
+     */
+    public function setPrice(int|float|string|null $price): InvoiceItem
     {
-        $this->price = $price;
+        $this->price = self::numeric($price, 'price');
         return $this;
     }
 
-    public function getPriceTotal(): int|float|null
+    /**
+     * @return int|float|numeric-string|null
+     */
+    public function getPriceTotal(): int|float|string|null
     {
         return $this->priceTotal;
     }
 
-    public function setPriceTotal(int|float|null $priceTotal): InvoiceItem
+    /**
+     * @param int|float|string|null $priceTotal a number or a numeric string, sent to the API as given
+     * @throws \InvalidArgumentException for a non-numeric string
+     */
+    public function setPriceTotal(int|float|string|null $priceTotal): InvoiceItem
     {
-        $this->priceTotal = $priceTotal;
+        $this->priceTotal = self::numeric($priceTotal, 'price_total');
         return $this;
     }
 

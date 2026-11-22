@@ -12,11 +12,11 @@ class Client
 
     private ?string $company = null;
 
-    private ?string $identifier = null;
+    private string|int|null $identifier = null;
 
-    private ?string $vatNumber = null;
+    private string|int|null $vatNumber = null;
 
-    private ?string $taxNumber = null;
+    private string|int|null $taxNumber = null;
 
     private ?Address $address = null;
 
@@ -34,15 +34,15 @@ class Client
         if ($company !== null) {
             $client->setCompany($company);
         }
-        $identifier = self::readString($data, 'identifier');
+        $identifier = self::readIdentifier($data, 'identifier');
         if ($identifier !== null) {
             $client->setIdentifier($identifier);
         }
-        $vatNumber = self::readString($data, 'vat_number');
+        $vatNumber = self::readIdentifier($data, 'vat_number');
         if ($vatNumber !== null) {
             $client->setVatNumber($vatNumber);
         }
-        $taxNumber = self::readString($data, 'tax_number');
+        $taxNumber = self::readIdentifier($data, 'tax_number');
         if ($taxNumber !== null) {
             $client->setTaxNumber($taxNumber);
         }
@@ -75,34 +75,34 @@ class Client
         return $this;
     }
 
-    public function getIdentifier(): ?string
+    public function getIdentifier(): string|int|null
     {
         return $this->identifier;
     }
 
-    public function setIdentifier(?string $identifier): Client
+    public function setIdentifier(string|int|null $identifier): Client
     {
         $this->identifier = $identifier;
         return $this;
     }
 
-    public function getVatNumber(): ?string
+    public function getVatNumber(): string|int|null
     {
         return $this->vatNumber;
     }
 
-    public function setVatNumber(?string $vatNumber): Client
+    public function setVatNumber(string|int|null $vatNumber): Client
     {
         $this->vatNumber = $vatNumber;
         return $this;
     }
 
-    public function getTaxNumber(): ?string
+    public function getTaxNumber(): string|int|null
     {
         return $this->taxNumber;
     }
 
-    public function setTaxNumber(?string $taxNumber): Client
+    public function setTaxNumber(string|int|null $taxNumber): Client
     {
         $this->taxNumber = $taxNumber;
         return $this;

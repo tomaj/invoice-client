@@ -65,7 +65,7 @@ class Serializer
     }
 
     /**
-     * @return array<string, string|null>
+     * @return array<string, string|int|null>
      */
     public function encodeAddress(Address $address): array
     {

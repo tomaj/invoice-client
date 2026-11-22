@@ -12,13 +12,13 @@ class Address
 
     private ?string $street2 = null;
 
-    private ?string $zip = null;
+    private string|int|null $zip = null;
 
     private ?string $email = null;
 
-    private ?string $tel = null;
+    private string|int|null $tel = null;
 
-    private ?string $fax = null;
+    private string|int|null $fax = null;
 
     private ?string $city = null;
 
@@ -40,7 +40,7 @@ class Address
         if ($street2 !== null) {
             $address->setStreet2($street2);
         }
-        $zip = self::readString($data, 'zip');
+        $zip = self::readIdentifier($data, 'zip');
         if ($zip !== null) {
             $address->setZip($zip);
         }
@@ -48,11 +48,11 @@ class Address
         if ($email !== null) {
             $address->setEmail($email);
         }
-        $tel = self::readString($data, 'tel');
+        $tel = self::readIdentifier($data, 'tel');
         if ($tel !== null) {
             $address->setTel($tel);
         }
-        $fax = self::readString($data, 'fax');
+        $fax = self::readIdentifier($data, 'fax');
         if ($fax !== null) {
             $address->setFax($fax);
         }
@@ -93,12 +93,12 @@ class Address
         return $this;
     }
 
-    public function getZip(): ?string
+    public function getZip(): string|int|null
     {
         return $this->zip;
     }
 
-    public function setZip(?string $zip): Address
+    public function setZip(string|int|null $zip): Address
     {
         $this->zip = $zip;
         return $this;
@@ -115,23 +115,23 @@ class Address
         return $this;
     }
 
-    public function getTel(): ?string
+    public function getTel(): string|int|null
     {
         return $this->tel;
     }
 
-    public function setTel(?string $tel): Address
+    public function setTel(string|int|null $tel): Address
     {
         $this->tel = $tel;
         return $this;
     }
 
-    public function getFax(): ?string
+    public function getFax(): string|int|null
     {
         return $this->fax;
     }
 
-    public function setFax(?string $fax): Address
+    public function setFax(string|int|null $fax): Address
     {
         $this->fax = $fax;
         return $this;
