@@ -1,0 +1,12 @@
+{
+    "name": "example/invoice-client-logging",
+    "description": "What InvoiceApi logs through a PSR-3 logger",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "tomaj/invoice-client": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

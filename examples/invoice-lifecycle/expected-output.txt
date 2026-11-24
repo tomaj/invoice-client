@@ -1,0 +1,13 @@
+createInvoice()                HTTP 200  ok
+  id: inv-0001
+getInvoice('inv-0001')         HTTP 200  ok
+  name: Invoice 2026002
+  client: Peter Horváth
+  items: 2
+  html: http://127.0.0.1:8702/html/inv-0001
+  pdf download: http://127.0.0.1:8702/pdf-download/inv-0001
+deleteInvoice('inv-0001')      HTTP 200  ok
+getInvoice('inv-0001')         HTTP 404  error: Invoice not found
+deleteInvoice('inv-0001')      HTTP 404  error: Invoice not found
+getInvoice('2026/002')         HTTP 404  error: Invoice not found
+  html: http://127.0.0.1:8702/html/2026%2F002

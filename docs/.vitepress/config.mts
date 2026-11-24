@@ -1,72 +1,112 @@
 import { defineConfig } from 'vitepress'
+import { seoHead, siteUrl } from './seo'
 
-const description = 'PHP client for the chcemfakturu.sk invoicing API: create, fetch and delete invoices'
-const siteUrl = 'https://tomaj.github.io/invoice-client/'
+const base = process.env.DOCS_BASE || '/invoice-client/'
+const description = 'PHP client for the chcemfakturu.sk invoicing API: build typed invoices, create, fetch and delete them, handle every error as a response, log through PSR-3 and test without the network'
+const repo = 'https://github.com/tomaj/invoice-client'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: 'Invoice Client',
   description,
-  base: '/invoice-client/',
+  lang: 'en',
+  base,
+  srcExclude: ['public/**', 'scripts/**', 'snippets/**', 'node_modules/**'],
+  cleanUrls: false,
   lastUpdated: true,
 
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/invoice-client/favicon.svg' }],
-    ['meta', { name: 'theme-color', content: '#1d4ed8' }],
-    ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:title', content: 'Invoice Client - PHP client for chcemfakturu.sk' }],
-    ['meta', { property: 'og:description', content: description }],
-    ['meta', { property: 'og:url', content: siteUrl }],
-    ['meta', { name: 'twitter:card', content: 'summary' }],
+    ['link', { rel: 'icon', href: `${base}favicon.ico`, sizes: '48x48' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: `${base}favicon.svg` }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: `${base}favicon-32.png` }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '16x16', href: `${base}favicon-16.png` }],
+    ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: `${base}apple-touch-icon.png` }],
+    ['link', { rel: 'manifest', href: `${base}site.webmanifest` }],
+    ['meta', { name: 'theme-color', content: '#e11d48' }],
   ],
 
   sitemap: {
     hostname: siteUrl,
   },
 
+  transformHead({ pageData, siteConfig }) {
+    return seoHead(pageData, siteConfig.srcDir, description)
+  },
+
   themeConfig: {
-    logo: '/logo.svg',
+    logo: { light: '/logo.svg', dark: '/logo-dark.svg', alt: 'Invoice Client' },
+    siteTitle: 'Invoice Client',
 
     nav: [
-      { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'API', link: '/api/reference' },
+      { text: 'Guide', link: '/guide/getting-started', activeMatch: '^/guide/' },
+      { text: 'Examples', link: '/examples/', activeMatch: '^/examples/' },
+      { text: 'Reference', link: '/api/reference' },
+      { text: 'FAQ', link: '/faq' },
       {
         text: '1.x (next)',
         items: [
           { text: 'Changelog', link: '/changelog' },
-          { text: 'Upgrade from dev-master', link: 'https://github.com/tomaj/invoice-client/blob/master/UPGRADE-1.0.md' },
-          { text: 'Releases', link: 'https://github.com/tomaj/invoice-client/releases' },
+          { text: 'Upgrade from dev-master', link: '/upgrade' },
+          { text: 'Releases', link: `${repo}/releases` },
         ],
       },
     ],
 
     sidebar: [
       {
-        text: 'Guide',
+        text: 'Getting started',
         items: [
-          { text: 'Getting Started', link: '/guide/getting-started' },
-          { text: 'Building Invoices', link: '/guide/invoices' },
-          { text: 'API Calls and Responses', link: '/guide/api' },
-          { text: 'Transports and Testing', link: '/guide/transports' },
+          { text: 'Getting started', link: '/guide/getting-started' },
+          { text: 'How it works', link: '/guide/how-it-works' },
         ],
       },
       {
-        text: 'Reference',
+        text: 'Guide',
         items: [
-          { text: 'API Reference', link: '/api/reference' },
+          { text: 'Building invoices', link: '/guide/invoices' },
+          { text: 'API calls', link: '/guide/api' },
+          { text: 'Responses', link: '/guide/responses' },
+          { text: 'Error handling', link: '/guide/errors' },
+          { text: 'Logging', link: '/guide/logging' },
+          { text: 'Transports', link: '/guide/transports' },
+          { text: 'Testing your integration', link: '/guide/testing' },
+          { text: 'Configuration reference', link: '/guide/configuration' },
+          { text: 'Security', link: '/guide/security' },
+        ],
+      },
+      {
+        text: 'Examples',
+        items: [
+          { text: 'Overview', link: '/examples/' },
+          { text: 'Create an invoice', link: '/examples/create-invoice' },
+          { text: 'Invoice lifecycle', link: '/examples/invoice-lifecycle' },
+          { text: 'Error handling', link: '/examples/error-handling' },
+          { text: 'Logging', link: '/examples/logging' },
+          { text: 'Retries and timeouts', link: '/examples/retries-and-timeouts' },
+          { text: 'Testing with PHPUnit', link: '/examples/testing' },
+          { text: 'The fake API', link: '/examples/fake-api' },
+        ],
+      },
+      {
+        text: 'More',
+        items: [
+          { text: 'API reference', link: '/api/reference' },
           { text: 'FAQ', link: '/faq' },
+          { text: 'Upgrade from dev-master', link: '/upgrade' },
           { text: 'Changelog', link: '/changelog' },
           { text: 'Contributing', link: '/contributing' },
         ],
       },
     ],
 
+    outline: [2, 3],
+
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/tomaj/invoice-client' },
+      { icon: 'github', link: repo },
     ],
 
     editLink: {
-      pattern: 'https://github.com/tomaj/invoice-client/edit/master/docs/:path',
+      pattern: `${repo}/edit/master/docs/:path`,
       text: 'Edit this page on GitHub',
     },
 
@@ -75,7 +115,7 @@ export default defineConfig({
     },
 
     footer: {
-      message: 'Released under the MIT License.',
+      message: 'Released under the <a href="https://github.com/tomaj/invoice-client/blob/master/LICENSE.md">MIT License</a>. Not affiliated with chcemfakturu.sk.',
       copyright: 'Copyright © 2015-2026 Tomas Majer',
     },
   },

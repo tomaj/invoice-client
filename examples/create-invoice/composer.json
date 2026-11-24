@@ -1,0 +1,12 @@
+{
+    "name": "example/invoice-client-create-invoice",
+    "description": "Build a complete invoice and create it through the fake chcemfakturu.sk API",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "tomaj/invoice-client": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

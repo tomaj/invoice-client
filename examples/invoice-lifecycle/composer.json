@@ -1,0 +1,12 @@
+{
+    "name": "example/invoice-client-invoice-lifecycle",
+    "description": "Create an invoice from an array, fetch it, link to it and delete it",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "tomaj/invoice-client": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

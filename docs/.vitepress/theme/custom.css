@@ -1,0 +1,195 @@
+/**
+ * Invoice Client theme: slate ink on paper with a rose "paid" stamp as the accent.
+ * Variables: https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css
+ */
+
+:root {
+  --vp-c-brand-1: #be123c;
+  --vp-c-brand-2: #e11d48;
+  --vp-c-brand-3: #f43f5e;
+  --vp-c-brand-soft: rgba(225, 29, 72, 0.12);
+
+  --vp-button-brand-border: transparent;
+  --vp-button-brand-text: #ffffff;
+  --vp-button-brand-bg: #e11d48;
+  --vp-button-brand-hover-border: transparent;
+  --vp-button-brand-hover-text: #ffffff;
+  --vp-button-brand-hover-bg: #be123c;
+  --vp-button-brand-active-border: transparent;
+  --vp-button-brand-active-text: #ffffff;
+  --vp-button-brand-active-bg: #9f1239;
+
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(120deg, #1e293b 10%, #e11d48 90%);
+  --vp-home-hero-image-background-image: radial-gradient(closest-side, rgba(244, 63, 94, 0.18), transparent);
+  --vp-home-hero-image-filter: blur(44px);
+
+  --ic-ink: #1e293b;
+  --ic-muted: #94a3b8;
+  --ic-soft: #fff1f2;
+  --ic-acc: #e11d48;
+  --ic-on-acc: #ffffff;
+}
+
+.dark {
+  --vp-c-brand-1: #fb7185;
+  --vp-c-brand-2: #f43f5e;
+  --vp-c-brand-3: #e11d48;
+  --vp-c-brand-soft: rgba(251, 113, 133, 0.16);
+
+  --vp-button-brand-text: #1e1b24;
+  --vp-button-brand-bg: #fb7185;
+  --vp-button-brand-hover-text: #1e1b24;
+  --vp-button-brand-hover-bg: #fda4af;
+  --vp-button-brand-active-text: #1e1b24;
+  --vp-button-brand-active-bg: #f43f5e;
+
+  --vp-home-hero-name-background: linear-gradient(120deg, #e2e8f0 10%, #fb7185 90%);
+  --vp-home-hero-image-background-image: radial-gradient(closest-side, rgba(251, 113, 133, 0.16), transparent);
+
+  --ic-ink: #e2e8f0;
+  --ic-muted: #64748b;
+  --ic-soft: #3f1d2b;
+  --ic-acc: #fb7185;
+  --ic-on-acc: #1e1b24;
+}
+
+@media (min-width: 640px) {
+  :root { --vp-home-hero-image-filter: blur(56px); }
+}
+
+@media (min-width: 960px) {
+  :root { --vp-home-hero-image-filter: blur(68px); }
+}
+
+/* The hero illustration: never wider than the column on a phone. */
+.VPHero .image-src {
+  max-width: 300px;
+}
+@media (min-width: 640px) {
+  .VPHero .image-src { max-width: 360px; }
+}
+@media (min-width: 960px) {
+  .VPHero .image-src { max-width: 440px; }
+}
+
+/* Feature icons: inline SVG coloured by the theme. */
+.VPFeature .icon {
+  width: 56px;
+  height: 56px;
+  background: var(--ic-soft);
+}
+.ic-icon { width: 36px; height: 36px; }
+.ic-icon .ic-ink { fill: none; stroke: var(--ic-ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.ic-icon .ic-muted { fill: none; stroke: var(--ic-muted); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.ic-icon .ic-acc { fill: none; stroke: var(--ic-acc); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.ic-icon .ic-accf { fill: var(--ic-acc); }
+.ic-icon .ic-mark { fill: none; stroke: var(--ic-on-acc); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.ic-icon .ic-paper { fill: var(--vp-c-bg); stroke: var(--ic-ink); stroke-width: 3; stroke-linejoin: round; }
+
+/* Light and dark variants of an image. */
+.only-dark { display: none; }
+.dark .only-light { display: none; }
+.dark .only-dark { display: inline-block; }
+
+.ic-diagram {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+.ic-diagram img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+}
+
+.ic-diagram-caption { display: none; margin-top: 4px; font-size: 13px; color: var(--vp-c-text-2); }
+@media (max-width: 640px) { .ic-diagram-caption { display: block; } }
+
+/* Wide tables scroll inside themselves instead of widening the page. */
+.vp-doc table { display: block; overflow-x: auto; }
+
+/* Runnable project box on the recipe pages. */
+.project-source {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--vp-c-brand-soft);
+  border-left: 4px solid var(--vp-c-brand-1);
+  border-radius: 8px;
+  background: var(--vp-c-bg-soft);
+}
+.project-source-text { flex: 1 1 22rem; min-width: 0; }
+.project-source-text p { margin: 0 0 0.5rem; font-size: 14px; line-height: 1.6; }
+.project-source .project-source-title { font-weight: 600; font-size: 15px; color: var(--vp-c-text-1); }
+.project-source-files { display: flex; flex-wrap: wrap; gap: 0.35rem 0.5rem; margin: 0.5rem 0 0 !important; padding: 0 !important; list-style: none; }
+.project-source-files li { margin: 0 !important; }
+.project-source-files a {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  font-family: var(--vp-font-family-mono);
+  font-size: 12.5px;
+  text-decoration: none;
+}
+.project-source-files a:hover { border-color: var(--vp-c-brand-1); }
+.project-source-button {
+  display: inline-flex;
+  flex: none;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.55rem 1rem;
+  border-radius: 20px;
+  border: 1px solid var(--vp-button-brand-border);
+  background: var(--vp-button-brand-bg);
+  color: var(--vp-button-brand-text) !important;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none !important;
+  white-space: nowrap;
+}
+.project-source-button:hover { background: var(--vp-button-brand-hover-bg); color: var(--vp-button-brand-hover-text) !important; }
+.project-source-button:focus-visible,
+.project-source-files a:focus-visible { outline: 2px solid var(--vp-c-brand-1); outline-offset: 2px; }
+.vp-doc ul.project-source-files { list-style: none; }
+.vp-doc ul.project-source-files li { list-style: none; }
+.vp-doc ul.project-source-files li::marker { content: none; }
+.project-source .project-source-label { margin: 0.75rem 0 0; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--vp-c-text-2); }
+
+/* Link cards ("Where to go next"). */
+.vp-doc ul.link-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+}
+.vp-doc ul.link-cards li { margin: 0; }
+.vp-doc a.link-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  height: 100%;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-1);
+  text-decoration: none;
+  transition: border-color 0.2s;
+}
+.vp-doc a.link-card:hover { border-color: var(--vp-c-brand-1); }
+.vp-doc a.link-card:focus-visible { outline: 2px solid var(--vp-c-brand-1); outline-offset: 2px; }
+.link-card-title { font-weight: 600; color: var(--vp-c-brand-1); }
+.link-card-text { font-size: 14px; line-height: 1.5; color: var(--vp-c-text-2); }
+
+/* Feature cards lift on hover */
+.VPFeatures .VPFeature { transition: transform .2s ease, box-shadow .2s ease; }
+.VPFeatures .VPLink:hover .VPFeature { transform: translateY(-2px); box-shadow: 0 8px 24px -12px rgb(225 29 72 / .35); }
+@media (prefers-reduced-motion: reduce) { .VPFeatures .VPFeature { transition: none; } .VPFeatures .VPLink:hover .VPFeature { transform: none; } }

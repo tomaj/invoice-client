@@ -1,0 +1,13 @@
+-- a successful call: debug before the request, info after it
+debug   Invoice API request {"method":"POST","url":"http://127.0.0.1:8704/api/v1/invoices/create"}
+info    Invoice API response {"method":"POST","url":"http://127.0.0.1:8704/api/v1/invoices/create","status":200}
+-- an API error: warning with the message of the API
+debug   Invoice API request {"method":"GET","url":"http://127.0.0.1:8704/api/v1/invoices/detail/inv-9999"}
+warning Invoice API error: Invoice not found {"method":"GET","url":"http://127.0.0.1:8704/api/v1/invoices/detail/inv-9999","status":404,"error":"Invoice not found"}
+-- no HTTP response: error with the exception, then the exception is thrown
+debug   Invoice API request {"method":"DELETE","url":"http://127.0.0.1:9/api/v1/invoices/delete/inv-0001"}
+error   Invoice API request failed {"method":"DELETE","url":"http://127.0.0.1:9/api/v1/invoices/delete/inv-0001","exception":"Tomaj\\InvoiceClient\\Exception\\TransportException"}
+(TransportException caught)
+-- what is never logged
+token in the log: no
+invoice data in the log: no
