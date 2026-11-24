@@ -1,0 +1,79 @@
+HTTP status: 200
+Invoice id:  inv-0001
+HTML:        http://127.0.0.1:8701/html/inv-0001
+PDF:         http://127.0.0.1:8701/pdf-download/inv-0001
+htmlUrl():        http://127.0.0.1:8701/html/inv-0001
+pdfUrl():         http://127.0.0.1:8701/pdf/inv-0001
+pdfDownloadUrl(): http://127.0.0.1:8701/pdf-download/inv-0001
+
+Stored by the API:
+{
+    "id": "inv-0001",
+    "number": "2026001",
+    "name": "Invoice 2026001",
+    "created": "2026-11-24",
+    "delivered": "2026-11-24",
+    "due": "2026-12-08",
+    "status": null,
+    "variable_symbol": "2026001",
+    "constant_symbol": "0308",
+    "description": "Thank you for your order.",
+    "items": [
+        {
+            "vat": 20,
+            "quantity": 10,
+            "description": "Consulting (hours)",
+            "price_item": "40.00",
+            "price": null,
+            "price_total": null
+        },
+        {
+            "vat": 20,
+            "quantity": 1,
+            "description": "Annual licence",
+            "price_item": 120,
+            "price": null,
+            "price_total": null,
+            "discount": {
+                "type": "flat",
+                "value": "20.00"
+            }
+        }
+    ],
+    "price": null,
+    "price_total": null,
+    "currency": "EUR",
+    "client": {
+        "name": "Jana Nováková",
+        "company": "Example s.r.o.",
+        "identifier": "12345678",
+        "vat_number": "SK2020123456",
+        "tax_number": "2020123456",
+        "address": {
+            "street": "Hlavná 1",
+            "street2": null,
+            "zip": "83104",
+            "city": "Bratislava",
+            "country": "Slovakia",
+            "state": null,
+            "email": "billing@example.sk",
+            "tel": null,
+            "fax": null
+        }
+    },
+    "shipping_address": {
+        "street": "Skladová 5",
+        "street2": null,
+        "zip": "82105",
+        "city": "Bratislava",
+        "country": "Slovakia",
+        "state": null,
+        "email": null,
+        "tel": null,
+        "fax": null
+    },
+    "discount": {
+        "type": "percent",
+        "value": 5
+    }
+}

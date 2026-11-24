@@ -120,6 +120,7 @@ $discount = new Discount(DiscountType::Percent, 15); // Discount is immutable
 
 `TransportInterface::call()` takes an `HttpMethod` enum first:
 
+<!-- snippet: skip -->
 ```php
 // before
 public function call(string $url, string $apiKey, ?string $payload, string $method = 'post'): ?Result;

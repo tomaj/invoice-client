@@ -1,0 +1,12 @@
+{
+    "name": "example/invoice-client-error-handling",
+    "description": "Every way a call can fail: API errors, unparsable responses, transport errors and invalid input",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "tomaj/invoice-client": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

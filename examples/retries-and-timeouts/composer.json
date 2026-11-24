@@ -1,0 +1,12 @@
+{
+    "name": "example/invoice-client-retries-and-timeouts",
+    "description": "A custom Guzzle client for GuzzleTransport: retries, timeouts and an extra header",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "tomaj/invoice-client": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

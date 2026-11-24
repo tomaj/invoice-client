@@ -1,0 +1,7 @@
+Order Invoicer (App\Tests\OrderInvoicer)
+ ✔ Returns the pdf link of the new invoice
+ ✔ Sends the order lines as invoice items
+ ✔ An api error becomes an application exception
+ ✔ Without a queued response nothing is sent
+ ✔ The http request through guzzle mock handler
+OK (5 tests, 16 assertions)

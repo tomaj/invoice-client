@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 480" width="980" height="480" role="img" aria-label="Your code builds an Invoice and calls InvoiceApi, which serializes it to JSON and hands it to a transport; the transport sends it to the chcemfakturu.sk API with the bearer token and returns the HTTP status and body as a Result; InvoiceApi wraps it in a response object. A missing HTTP response throws TransportException; invalid input throws before any request.">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#94a3b8"/></marker></defs>
+  <style>
+    .bt { font: 700 15px ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; fill: #e2e8f0; }
+    .bm { font: 500 12.5px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #cbd5e1; }
+    .bs { font: 500 13px ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; fill: #cbd5e1; }
+    .lb { font: 600 12px ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; fill: #94a3b8; }
+    .ex { font: 600 12.5px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #fb7185; }
+  </style>
+  <rect width="980" height="480" rx="16" fill="#0f172a"/>
+  <rect x="20" y="40" width="196" height="120" rx="12" fill="#172033" stroke="#475569" stroke-width="2"/>
+  <text x="36" y="68" class="bt">Your code</text>
+  <text x="36" y="92" class="bm">Invoice</text>
+  <text x="36" y="112" class="bm">InvoiceItem, Client</text>
+  <text x="36" y="132" class="bm">Address, Discount</text>
+  <rect x="276" y="40" width="196" height="120" rx="12" fill="#3f1d2b" stroke="#fb7185" stroke-width="2"/>
+  <text x="292" y="68" class="bt">InvoiceApi</text>
+  <text x="292" y="92" class="bm">createInvoice()</text>
+  <text x="292" y="112" class="bm">getInvoice()</text>
+  <text x="292" y="132" class="bm">deleteInvoice()</text>
+  <rect x="532" y="40" width="196" height="120" rx="12" fill="#172033" stroke="#475569" stroke-width="2"/>
+  <text x="548" y="68" class="bt">Transport</text>
+  <text x="548" y="92" class="bm">GuzzleTransport</text>
+  <text x="548" y="112" class="bm">TestTransport</text>
+  <text x="548" y="132" class="bm">NullTransport</text>
+  <rect x="788" y="40" width="172" height="120" rx="12" fill="#172033" stroke="#475569" stroke-width="2"/>
+  <text x="804" y="68" class="bt">chcemfakturu.sk</text>
+  <text x="804" y="92" class="bs">Bearer token</text>
+  <text x="804" y="112" class="bs">JSON body</text>
+  <text x="804" y="132" class="bs">/api/v1/invoices/</text>
+  <path d="M218 100L274 100" stroke="#94a3b8" stroke-width="2" marker-end="url(#a)"/>
+  <text x="246" y="90" class="lb" text-anchor="middle">Invoice</text>
+  <path d="M474 100L530 100" stroke="#94a3b8" stroke-width="2" marker-end="url(#a)"/>
+  <text x="502" y="90" class="lb" text-anchor="middle">JSON</text>
+  <path d="M730 100L786 100" stroke="#94a3b8" stroke-width="2" marker-end="url(#a)"/>
+  <text x="758" y="90" class="lb" text-anchor="middle">HTTP</text>
+  <rect x="788" y="228" width="172" height="100" rx="12" fill="#172033" stroke="#475569" stroke-width="2"/>
+  <text x="804" y="256" class="bt">HTTP response</text>
+  <text x="804" y="280" class="bs">2xx, 4xx, 5xx</text>
+  <text x="804" y="300" class="bs">any body</text>
+  <rect x="532" y="228" width="196" height="100" rx="12" fill="#172033" stroke="#475569" stroke-width="2"/>
+  <text x="548" y="256" class="bt">Result</text>
+  <text x="548" y="280" class="bm">getCode()</text>
+  <text x="548" y="300" class="bm">getBody()</text>
+  <rect x="276" y="228" width="196" height="160" rx="12" fill="#3f1d2b" stroke="#fb7185" stroke-width="2"/>
+  <text x="292" y="256" class="bt">Response</text>
+  <text x="292" y="280" class="bm">isOk()</text>
+  <text x="292" y="300" class="bm">getStatusCode()</text>
+  <text x="292" y="320" class="bm">getErrorMessage()</text>
+  <text x="292" y="340" class="bm">getBody(), getData()</text>
+  <text x="292" y="360" class="bm">getId() (create)</text>
+  <rect x="20" y="228" width="196" height="100" rx="12" fill="#172033" stroke="#475569" stroke-width="2"/>
+  <text x="36" y="256" class="bt">Your code</text>
+  <text x="36" y="280" class="bm">if ($r->isOk())</text>
+  <text x="36" y="300" class="bm">  ... else log the error</text>
+  <path d="M874 160L874 226" stroke="#94a3b8" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M786 278L730 278" stroke="#94a3b8" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M530 278L474 278" stroke="#94a3b8" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M274 300L218 300" stroke="#94a3b8" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M118 160L118 226" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#a)"/>
+  <rect x="532" y="348" width="428" height="112" rx="12" fill="none" stroke="#fb7185" stroke-width="2" stroke-dasharray="6 5"/>
+  <text x="548" y="378" class="bt">Exceptions: no response or bad input</text>
+  <text x="548" y="402" class="ex">TransportException</text><text x="748" y="402" class="bs">no HTTP response at all</text>
+  <text x="548" y="424" class="ex">SerializationException</text><text x="748" y="424" class="bs">invoice is not valid JSON</text>
+  <text x="548" y="444" class="ex">InvalidValueException</text><text x="748" y="444" class="bs">wrong values, thrown early</text>
+  <text x="20" y="372" class="bt">PSR-3 logger</text>
+  <text x="20" y="396" class="bs">debug request, info response,</text>
+  <text x="20" y="416" class="bs">warning API error, error failure;</text>
+  <text x="20" y="436" class="bs">never the token or invoice data</text>
+</svg>

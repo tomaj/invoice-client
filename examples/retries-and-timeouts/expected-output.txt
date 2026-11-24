@@ -1,0 +1,7 @@
+created inv-0001
+GET through a server that fails twice with 503:
+  attempt 1: HTTP 503, retrying
+  attempt 2: HTTP 503, retrying
+  result: HTTP 200, ok
+GET from a server that needs 3 seconds, with a 2 second timeout:
+  Tomaj\InvoiceClient\Exception\TransportException (GuzzleHttp\Exception\NetworkTimeoutException)

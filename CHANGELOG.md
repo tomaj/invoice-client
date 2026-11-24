@@ -13,6 +13,7 @@ Developers who used `dev-master` before the 1.0.0 work: [UPGRADE-1.0.md](https:/
 - The PSR-3 logger receives the method and URL of each request, the status code of each response, API error messages and transport failures; never the token or invoice data. `psr/log` `^2 || ^3` is a dependency ([#14](https://github.com/tomaj/invoice-client/issues/14)).
 - `TestTransport` queues several responses (`addResponse()`) and records every request (`getRequests()`, `getLastRequest()`) ([#8](https://github.com/tomaj/invoice-client/issues/8)).
 - `Client::fromArray()` reads `identifier` ([#2](https://github.com/tomaj/invoice-client/pull/2)).
+- Documentation site at presentation level: own logo, favicons, illustrations and flow diagram, a page per topic (responses, error handling, logging, transports, testing, configuration, security, upgrade), a full API reference, and six runnable examples against a local fake API, run by the new `Examples` workflow ([#17](https://github.com/tomaj/invoice-client/issues/17)).
 - `LICENSE.md` (MIT), `SECURITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `RELEASING.md` ([#4](https://github.com/tomaj/invoice-client/issues/4)); documentation site https://tomaj.github.io/invoice-client/ ([#10](https://github.com/tomaj/invoice-client/issues/10)).
 
 ### Changed

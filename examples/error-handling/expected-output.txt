@@ -1,0 +1,53 @@
+API errors are responses, check isOk():
+
+== wrong token
+   isOk(): false
+   getStatusCode(): 401
+   getErrorMessage(): 'Invalid API token'
+   getBody(): '{"status":"error","message":"Invalid API token"}'
+== invoice without items
+   isOk(): false
+   getStatusCode(): 422
+   getErrorMessage(): 'The invoice has no items'
+   getBody(): '{"status":"error","message":"The invoice has no items"}'
+== unknown invoice
+   isOk(): false
+   getStatusCode(): 404
+   getErrorMessage(): 'Invoice not found'
+   getBody(): '{"status":"error","message":"Invoice not found"}'
+== HTML error page from a proxy
+   isOk(): false
+   getStatusCode(): 502
+   getErrorMessage(): 'Cannot parse response from server (HTTP 502)'
+   getBody(): '<html><body><h1>502 Bad Gateway</h1></body></html>'
+== NullTransport
+   isOk(): false
+   getStatusCode(): 0
+   getErrorMessage(): 'No request was sent'
+   getBody(): ''
+
+Exceptions mean no HTTP response or invalid input:
+
+== server not reachable
+   Tomaj\InvoiceClient\Exception\TransportException
+   POST http://127.0.0.1:9/api/v1/invoices/create failed
+   previous: GuzzleHttp\Exception\ConnectException
+== target without a scheme
+   Tomaj\InvoiceClient\Exception\InvalidValueException
+   Target must start with http:// or https://, 'chcemfakturu.sk' given
+== non-numeric price
+   Tomaj\InvoiceClient\Exception\InvalidValueException
+   price_item must be a number or a numeric string, 'forty' given
+== flat discount on the whole invoice
+   Tomaj\InvoiceClient\Exception\UnsupportedDiscountException
+   Flat discount is unsupported for invoice. Add new item with negative price for flat discount.
+== unknown discount type
+   Tomaj\InvoiceClient\Exception\InvalidValueException
+   Unknown discount type 'gift'
+== unsupported currency
+   Tomaj\InvoiceClient\Exception\UnsupportedCurrencyException
+   Unsupported currency 'BTC'
+== text that is not UTF-8
+   Tomaj\InvoiceClient\Exception\SerializationException
+   Cannot encode the invoice as JSON: Malformed UTF-8 characters, possibly incorrectly encoded
+   previous: JsonException

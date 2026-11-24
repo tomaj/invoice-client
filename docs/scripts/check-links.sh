@@ -8,6 +8,8 @@ port="${DOCS_LINK_PORT:-4173}"
 base="/invoice-client/"
 
 npm run docs:build
+# hand-written SVGs (logo, illustrations, diagrams) must be well-formed in the source and the built site
+python3 scripts/check-svg.py public .vitepress/dist
 
 if curl -sf -o /dev/null "http://127.0.0.1:${port}${base}"; then
   echo "Port ${port} is already in use" >&2
@@ -142,13 +144,14 @@ while true; do
   if [[ "$status" -eq 0 ]]; then
     break
   fi
-  mapfile -t codes < <(grep -oE '\[[0-9]{3}\]' /tmp/invoice-client-docs-linkinator.txt | tr -d '[]' | sort -u)
-  if [[ ${#codes[@]} -eq 0 ]]; then
+  # no mapfile: the script must run with the bash 3.2 of macOS
+  codes="$(grep -oE '\[[0-9]{3}\]' /tmp/invoice-client-docs-linkinator.txt | tr -d '[]' | sort -u || true)"
+  if [[ -z "$codes" ]]; then
     exit "$status"
   fi
   only_rate_limit=1
   retryable=1
-  for code in "${codes[@]}"; do
+  for code in $codes; do
     if [[ "$code" != "429" ]]; then
       only_rate_limit=0
     fi

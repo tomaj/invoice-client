@@ -1,17 +1,26 @@
+<p align="center">
+  <a href="https://tomaj.github.io/invoice-client/">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="docs/public/logo-dark.svg">
+      <img src="docs/public/logo.svg" alt="Invoice Client" width="96" height="96">
+    </picture>
+  </a>
+</p>
+
 # Invoice Client
 
 **PHP client for the [chcemfakturu.sk](https://chcemfakturu.sk) invoicing API: create, fetch and delete invoices.**
 
 **Documentation: https://tomaj.github.io/invoice-client/**
 
-[Getting started](https://tomaj.github.io/invoice-client/guide/getting-started) · [Building invoices](https://tomaj.github.io/invoice-client/guide/invoices) · [API reference](https://tomaj.github.io/invoice-client/api/reference) · [Changelog](https://tomaj.github.io/invoice-client/changelog)
+[Getting started](https://tomaj.github.io/invoice-client/guide/getting-started) · [Building invoices](https://tomaj.github.io/invoice-client/guide/invoices) · [Examples](https://tomaj.github.io/invoice-client/examples/) · [API reference](https://tomaj.github.io/invoice-client/api/reference) · [Changelog](https://tomaj.github.io/invoice-client/changelog)
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/tomaj/invoice-client.svg)](https://packagist.org/packages/tomaj/invoice-client)
 [![CI](https://github.com/tomaj/invoice-client/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/tomaj/invoice-client/actions/workflows/ci.yml?query=branch%3Amaster)
 [![Coverage Status](https://coveralls.io/repos/github/tomaj/invoice-client/badge.svg?branch=master)](https://coveralls.io/github/tomaj/invoice-client?branch=master)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%20max-brightgreen.svg)](https://phpstan.org/)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/tomaj/invoice-client/badge)](https://scorecard.dev/viewer/?uri=github.com/tomaj/invoice-client)
-[![Documentation](https://img.shields.io/badge/docs-1.x-4f46e5.svg)](https://tomaj.github.io/invoice-client/)
+[![Documentation](https://img.shields.io/badge/docs-1.x-e11d48.svg)](https://tomaj.github.io/invoice-client/)
 [![License](https://img.shields.io/packagist/l/tomaj/invoice-client.svg)](LICENSE.md)
 [![PHP Version](https://img.shields.io/badge/php-%5E8.4-777bb4.svg)](https://www.php.net/)
 
@@ -59,6 +68,10 @@ if ($response->isOk()) {
 ```
 
 All invoice fields, `getInvoice()` / `deleteInvoice()`, error handling, logging, timeouts and testing are described in the **[documentation](https://tomaj.github.io/invoice-client/)**.
+
+## Examples
+
+[`examples/`](examples/) holds six runnable recipes (create an invoice, the create/fetch/delete lifecycle, error handling, logging, retries and timeouts, PHPUnit tests with `TestTransport`). They run against a local fake API started with `php -S`, need no account or token, and CI runs each one on every push: `examples/ci/recipe.sh create-invoice`.
 
 ## Contributing
 
