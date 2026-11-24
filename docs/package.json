@@ -19,7 +19,7 @@
   "license": "MIT",
   "devDependencies": {
     "linkinator": "8.1.0",
-    "puppeteer-core": "25.15.0",
+    "puppeteer-core": "25.18.1",
     "vitepress": "1.6.4"
   },
   "overrides": {
