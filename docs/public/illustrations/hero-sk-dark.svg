@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 420" width="480" height="420" role="img" aria-label="Faktúra s tromi položkami a pečiatkou UHRADENÉ, odoslaná ako JSON do fakturačného API, ktoré odpovie stavom ok">
+  <style>
+    .t { font: 500 13px ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; fill: #cbd5e1; }
+    .h { font: 700 20px ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; fill: #e2e8f0; }
+    .s { font: 600 11px ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; fill: #94a3b8; letter-spacing: .06em; }
+    .m { font: 600 12px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #cbd5e1; }
+    .k { font: 600 12px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #fb7185; }
+  </style>
+  <g transform="translate(-44 0)">
+  <rect x="72" y="58" width="282" height="330" rx="18" fill="#334155" opacity=".7"/>
+  <rect x="64" y="46" width="290" height="330" rx="18" fill="#1e293b" stroke="#e2e8f0" stroke-width="3"/>
+  <text x="96" y="92" class="h">Faktúra 2026001</text>
+  <text x="96" y="114" class="s">SPLATNÁ 8. 12. 2026 · VS 2026001</text>
+  <rect x="96" y="132" width="120" height="44" rx="8" fill="#172033" stroke="#334155" stroke-width="1.5"/>
+  <text x="108" y="151" class="s">ODBERATEĽ</text>
+  <text x="108" y="168" class="t">Example s.r.o.</text>
+  <text x="96" y="194" class="s">POLOŽKA</text>
+  <text x="262" y="194" class="s" text-anchor="end">MN.</text>
+  <text x="330" y="194" class="s" text-anchor="end">CENA</text>
+  <text x="96" y="214" class="t">Konzultácie</text>
+  <text x="262" y="214" class="t" text-anchor="end">10</text>
+  <text x="330" y="214" class="t" text-anchor="end">400,00</text>
+  <path d="M96 226h234" stroke="#334155" stroke-width="1.5"/>
+  <text x="96" y="244" class="t">Ročná licencia</text>
+  <text x="262" y="244" class="t" text-anchor="end">1</text>
+  <text x="330" y="244" class="t" text-anchor="end">100,00</text>
+  <path d="M96 256h234" stroke="#334155" stroke-width="1.5"/>
+  <text x="96" y="274" class="t">Podpora</text>
+  <text x="262" y="274" class="t" text-anchor="end">2</text>
+  <text x="330" y="274" class="t" text-anchor="end">60,00</text>
+  <path d="M96 286h234" stroke="#334155" stroke-width="1.5"/>
+  <text x="96" y="330" class="h" style="font-size:16px">Spolu</text>
+  <text x="330" y="330" class="h" style="font-size:16px" text-anchor="end">560,00 €</text>
+  <g transform="rotate(-12 284 156)">
+    <rect x="220" y="136" width="128" height="38" rx="9" fill="none" stroke="#fb7185" stroke-width="3.5"/>
+    <text x="284" y="162" text-anchor="middle" style="font: 800 15px ui-sans-serif, system-ui, sans-serif; letter-spacing: .08em; fill: #fb7185">UHRADENÉ</text>
+  </g>
+  </g>
+  <rect x="330" y="232" width="140" height="104" rx="14" fill="#1e293b" stroke="#fb7185" stroke-width="2.5"/>
+  <text x="344" y="256" class="m">{</text>
+  <text x="356" y="276" class="k">"status"<tspan class="m">:</tspan></text>
+  <text x="372" y="294" class="m">"ok",</text>
+  <text x="356" y="312" class="k">"id"<tspan class="m">: "inv-1"</tspan></text>
+  <text x="344" y="328" class="m">}</text>
+  <path d="M398 222v-60" stroke="#fb7185" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 7"/>
+  <circle cx="398" cy="128" r="30" fill="#3f1d2b" stroke="#fb7185" stroke-width="2.5"/>
+  <path d="M384 128h28M402 118l10 10-10 10" fill="none" stroke="#fb7185" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="398" y="80" class="s" text-anchor="middle">API</text>
+</svg>
