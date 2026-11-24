@@ -7,6 +7,9 @@ cd "$(dirname "$0")/.."
 port="${DOCS_LINK_PORT:-4173}"
 base="/invoice-client/"
 
+# the Slovak SVG variants must match their English drawings, and every page needs its twin
+python3 scripts/illustrations.py --check
+python3 scripts/check-locales.py
 npm run docs:build
 # hand-written SVGs (logo, illustrations, diagrams) must be well-formed in the source and the built site
 python3 scripts/check-svg.py public .vitepress/dist

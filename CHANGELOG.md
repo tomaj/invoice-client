@@ -15,6 +15,7 @@ Developers who used `dev-master` before the 1.0.0 work: [UPGRADE-1.0.md](https:/
 - `Client::fromArray()` reads `identifier` ([#2](https://github.com/tomaj/invoice-client/pull/2)).
 - Documentation site at presentation level: own logo, favicons, illustrations and flow diagram, a page per topic (responses, error handling, logging, transports, testing, configuration, security, upgrade), a full API reference, and six runnable examples against a local fake API, run by the new `Examples` workflow ([#17](https://github.com/tomaj/invoice-client/issues/17)).
 - `LICENSE.md` (MIT), `SECURITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `RELEASING.md` ([#4](https://github.com/tomaj/invoice-client/issues/4)); documentation site https://tomaj.github.io/invoice-client/ ([#10](https://github.com/tomaj/invoice-client/issues/10)).
+- Slovak translation of the documentation site ([#21](https://github.com/tomaj/invoice-client/issues/21)).
 
 ### Changed
 - `GuzzleTransport` sends the JSON body of `createInvoice()` with `Content-Type: application/json` (the body is unchanged; `GET` and `DELETE` have no body and no `Content-Type`). The fake API of the examples rejects a create request without it ([#19](https://github.com/tomaj/invoice-client/issues/19)).
