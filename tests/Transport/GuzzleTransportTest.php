@@ -61,7 +61,25 @@ final class GuzzleTransportTest extends TestCase
         self::assertSame('https://example.test/api', (string) $request->getUri());
         self::assertSame('Bearer secret', $request->getHeaderLine('Authorization'));
         self::assertSame('{"a":1}', (string) $request->getBody());
-        self::assertFalse($request->hasHeader('Content-Type'));
+        self::assertSame(['application/json'], $request->getHeader('Content-Type'));
+    }
+
+    public function testContentTypeOverridesTheClientDefaultAndKeepsOtherDefaultHeaders(): void
+    {
+        $this->handler = new MockHandler([new Response(200, [], '{"status":"ok"}')]);
+        $client = new Client([
+            'handler' => HandlerStack::create($this->handler),
+            'headers' => ['Content-Type' => 'text/plain', 'User-Agent' => 'acme/1.0'],
+        ]);
+
+        new GuzzleTransport($client)->call(HttpMethod::Post, 'https://example.test/api', 'secret', '{"a":"\\u00e1"}');
+
+        $request = $this->lastRequest();
+        self::assertSame(['application/json'], $request->getHeader('Content-Type'));
+        self::assertSame('acme/1.0', $request->getHeaderLine('User-Agent'));
+        self::assertSame('Bearer secret', $request->getHeaderLine('Authorization'));
+        // the payload is sent byte for byte, not JSON-encoded a second time
+        self::assertSame('{"a":"\\u00e1"}', (string) $request->getBody());
     }
 
     /**
@@ -85,6 +103,7 @@ final class GuzzleTransportTest extends TestCase
         self::assertSame('https://example.test/api/v1/invoices/detail/7', (string) $request->getUri());
         self::assertSame('Bearer secret', $request->getHeaderLine('Authorization'));
         self::assertSame('', (string) $request->getBody());
+        self::assertFalse($request->hasHeader('Content-Type'));
     }
 
     public function testEmptyPayloadSendsNoBody(): void
@@ -94,6 +113,7 @@ final class GuzzleTransportTest extends TestCase
         $transport->call(HttpMethod::Post, 'https://example.test/api', 'secret', '');
 
         self::assertSame('', (string) $this->lastRequest()->getBody());
+        self::assertFalse($this->lastRequest()->hasHeader('Content-Type'));
     }
 
     /**

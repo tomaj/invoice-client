@@ -61,6 +61,7 @@ $api = new InvoiceApi('test-token', transport: new GuzzleTransport(new Client(['
 $api->createInvoice($invoice);
 
 $history[0]['request']->getHeaderLine('Authorization'); // 'Bearer test-token'
+$history[0]['request']->getHeaderLine('Content-Type');  // 'application/json'
 ```
 
 ## A PHPUnit test of your service

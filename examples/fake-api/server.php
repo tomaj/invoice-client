@@ -10,7 +10,9 @@
  * documented API; the detail and delete formats are assumptions, not verified against the live API.
  * Invoices are kept in the JSON file FAKE_API_STATE, so ids are deterministic: inv-0001, inv-0002, ...
  *
- * The only accepted token is "test-token". Prefixes simulate failures:
+ * The only accepted token is "test-token". A create request without "Content-Type: application/json"
+ * is rejected with 415, so the examples prove that GuzzleTransport sends the header.
+ * Prefixes simulate failures:
  *   /outage/...  answers 502 with an HTML page, like a proxy in front of a broken server
  *   /flaky/...   answers 503 to the first two requests, then works
  *   /slow/...    waits 3 seconds before it answers
@@ -98,6 +100,10 @@ if ($authorization !== 'Bearer ' . TOKEN) {
 if ($path === '/api/v1/invoices/create') {
     if ($method !== 'POST') {
         error(405, 'Method not allowed');
+    }
+    $contentType = strtolower(trim(explode(';', (string) ($_SERVER['CONTENT_TYPE'] ?? ''))[0]));
+    if ($contentType !== 'application/json') {
+        error(415, 'The request body must be sent with Content-Type: application/json');
     }
     $request = json_decode((string) file_get_contents('php://input'), true);
     if (!is_array($request) || !is_array($request['invoice'] ?? null)) {

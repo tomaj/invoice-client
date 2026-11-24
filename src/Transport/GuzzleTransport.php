@@ -30,7 +30,8 @@ final readonly class GuzzleTransport implements TransportInterface
     }
 
     /**
-     * Every HTTP response is returned as a Result, 4xx and 5xx included, so the caller can read the API error.
+     * A body is sent with Content-Type: application/json. Every HTTP response is returned as a Result,
+     * 4xx and 5xx included, so the caller can read the API error.
      */
     #[\Override]
     public function call(HttpMethod $method, string $url, string $apiToken, ?string $payload = null): Result
@@ -43,6 +44,8 @@ final readonly class GuzzleTransport implements TransportInterface
         ];
 
         if (($payload ?? '') !== '') {
+            // the payload is JSON already: send it as is (Guzzle's "json" option would encode it again)
+            $options['headers']['Content-Type'] = 'application/json';
             $options['body'] = $payload;
         }
 

@@ -95,6 +95,7 @@ final class OrderInvoicerTest extends TestCase
         $request = $history[0]['request'];
         self::assertSame('POST', $request->getMethod());
         self::assertSame('Bearer test-token', $request->getHeaderLine('Authorization'));
+        self::assertSame('application/json', $request->getHeaderLine('Content-Type'));
         self::assertStringStartsWith('{"invoice":', (string) $request->getBody());
     }
 }
