@@ -24,7 +24,7 @@ new GuzzleTransport($yourGuzzleClient); // any GuzzleHttp\ClientInterface
 For every request it:
 
 - sets `Authorization: Bearer <token>` (merged with your client's default headers),
-- sends the JSON as the body when there is one (`createInvoice()`); `GET` and `DELETE` have no body,
+- sends the JSON as the body with `Content-Type: application/json` when there is one (`createInvoice()`); the JSON is sent as it is, not encoded again. `GET` and `DELETE` have no body and no `Content-Type`,
 - sets the request option `http_errors` to `false`, so a 4xx or 5xx answer is returned as a `Result` instead of a Guzzle exception, whatever your client's own setting,
 - turns every `GuzzleHttp\Exception\GuzzleException` (no response) into a `TransportException` with the Guzzle exception as `getPrevious()`.
 
@@ -41,7 +41,7 @@ Useful [Guzzle request options](https://docs.guzzlephp.org/en/stable/request-opt
 | Option | Why |
 | --- | --- |
 | `timeout`, `connect_timeout` | how long to wait for the API; a timeout becomes a `TransportException` |
-| `headers` | e.g. a `User-Agent` identifying your application, or `Content-Type: application/json` if your API account requires it (the client does not set one) |
+| `headers` | e.g. a `User-Agent` identifying your application (`Authorization` and, for a body, `Content-Type` are always set by the transport) |
 | `proxy` | an outgoing proxy |
 | `handler` | a `HandlerStack` with middleware: retries, history for debugging, a `MockHandler` in tests |
 
@@ -81,7 +81,7 @@ public function call(HttpMethod $method, string $url, string $apiToken, ?string 
 | `$method` | `HttpMethod::Get`, `Post` or `Delete`; `->value` is the HTTP method string |
 | `$url` | the full URL, id already URL-encoded |
 | `$apiToken` | send it as `Authorization: Bearer <token>`; never log it |
-| `$payload` | the JSON body, or `null` for none |
+| `$payload` | the JSON body, or `null` for none; send it with `Content-Type: application/json` |
 
 Return every HTTP response as a `new Result($statusCode, $body)`, 4xx and 5xx included. Throw `TransportException` only when there is no response. Return `null` only if your transport deliberately sends nothing.
 
@@ -110,7 +110,9 @@ final readonly class Psr18Transport implements TransportInterface
         $request = $this->requests->createRequest($method->value, $url)
             ->withHeader('Authorization', 'Bearer ' . $apiToken);
         if ($payload !== null && $payload !== '') {
-            $request = $request->withBody($this->streams->createStream($payload));
+            $request = $request
+                ->withHeader('Content-Type', 'application/json')
+                ->withBody($this->streams->createStream($payload));
         }
 
         try {

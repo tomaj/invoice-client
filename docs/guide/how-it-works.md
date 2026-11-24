@@ -22,7 +22,7 @@ Take `$api->createInvoice($invoice)`:
 
 1. **Encode.** `Serializer::encodeInvoice()` turns the invoice into JSON. Values are written exactly as you set them. A text that is not valid UTF-8 throws `SerializationException`; nothing is sent and nothing is logged.
 2. **Log the request.** The PSR-3 logger gets `debug` `Invoice API request` with the method and URL.
-3. **Send.** The transport receives the method (`HttpMethod::Post`), the URL (`{target}/api/v1/invoices/create`), the token and the JSON. `GuzzleTransport` sends it with `Authorization: Bearer <token>` and returns **every** HTTP response, 4xx and 5xx included, as a `Result`.
+3. **Send.** The transport receives the method (`HttpMethod::Post`), the URL (`{target}/api/v1/invoices/create`), the token and the JSON. `GuzzleTransport` sends it with `Authorization: Bearer <token>` and `Content-Type: application/json` and returns **every** HTTP response, 4xx and 5xx included, as a `Result`.
 4. **No HTTP response?** DNS failure, refused connection, timeout or TLS error: the transport throws `TransportException`, the logger gets `error` `Invoice API request failed`, and the exception reaches your code.
 5. **Parse.** The response object decodes the body. It is OK when the HTTP status is 2xx and the JSON has `"status": "ok"`. Otherwise the error message is the API's `message`, or one the client writes itself (see [Responses](./responses.md#error-messages)).
 6. **Log the result.** `info` `Invoice API response` with the status code when OK; `warning` `Invoice API error: {error}` otherwise.
@@ -39,4 +39,3 @@ An invalid token, a validation error and a server error are answers of the API. 
 - **No retries.** A failed request is reported once. Add retries for `GET`/`DELETE` with Guzzle middleware, see the [retries example](../examples/retries-and-timeouts.md). Do not blindly retry `createInvoice()`: a request that timed out may still have created the invoice.
 - **No validation of invoice content.** Required fields, VAT rates and totals are checked by the API, which answers with an error message.
 - **No issuer data.** The issuer of an invoice is the account the token belongs to; `Issuer` has no fields and is not sent.
-- **No `Content-Type` header.** `GuzzleTransport` sends the JSON body with the `Authorization` header only. If your account's API requires `Content-Type: application/json`, add it to your Guzzle client's default headers ([Transports](./transports.md#your-own-guzzle-client)).

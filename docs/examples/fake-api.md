@@ -20,6 +20,7 @@ $api = new InvoiceApi('test-token', target: 'http://127.0.0.1:8701');
 | --- | --- |
 | any `/api/…` request without `Authorization: Bearer test-token` | `401` `{"status":"error","message":"Invalid API token"}` |
 | `POST /api/v1/invoices/create` | `200` `{"status":"ok","id":"inv-0001","html_url":"…/html/inv-0001","download_pdf_url":"…/pdf-download/inv-0001"}` |
+| create without `Content-Type: application/json` | `415` `{"status":"error","message":"The request body must be sent with Content-Type: application/json"}` |
 | create with a body that is not `{"invoice": {...}}` | `400` with a message |
 | create without items | `422` `{"status":"error","message":"The invoice has no items"}` |
 | create with a currency the API does not know | `422` `{"status":"error","message":"Unsupported currency"}` |

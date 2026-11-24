@@ -199,7 +199,7 @@ Namespace `Tomaj\InvoiceClient\Transport`. Guide: [Transports](../guide/transpor
 | --- | --- |
 | `const int TIMEOUT = 10` | timeout of the default client, seconds |
 | `__construct(?GuzzleHttp\ClientInterface $client = null)` | your client, or a new one with `timeout` = `TIMEOUT` |
-| `call(…): Result` | never returns `null` |
+| `call(…): Result` | sends `Authorization: Bearer <token>`, and `Content-Type: application/json` with a body; never returns `null` |
 
 ### TestTransport
 
