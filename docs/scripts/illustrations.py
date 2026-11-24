@@ -41,8 +41,8 @@ STRINGS: dict[str, list[tuple[str, str]]] = {
         (">Total<", ">Spolu<"),
         (">€ 560.00<", ">560,00 €<"),
         # the stamp: a longer word, so a wider frame and a smaller font
-        ('<rect x="236" y="136" width="96" height="38" rx="9"', '<rect x="220" y="136" width="128" height="38" rx="9"'),
-        ("font: 800 20px ui-sans-serif, system-ui, sans-serif; letter-spacing: .14em;", "font: 800 15px ui-sans-serif, system-ui, sans-serif; letter-spacing: .08em;"),
+        ('<rect x="236" y="136" width="96" height="38" rx="9"', '<rect x="230" y="138" width="108" height="34" rx="8"'),
+        ("font: 800 20px ui-sans-serif, system-ui, sans-serif; letter-spacing: .14em;", "font: 800 13px ui-sans-serif, system-ui, sans-serif; letter-spacing: .06em;"),
         (">PAID<", ">UHRADENÉ<"),
     ],
     "diagrams/flow": [

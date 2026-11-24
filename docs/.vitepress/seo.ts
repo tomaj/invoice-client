@@ -7,6 +7,8 @@ const base = process.env.DOCS_BASE || '/invoice-client/'
 export const isPreview = base !== '/invoice-client/'
 export const siteUrl = `https://tomaj.github.io${base}`
 export const ogImage = `${siteUrl}og.png`
+// Slovak pages get the social card with the Slovak tagline.
+export const ogImageSk = `${siteUrl}og-sk.png`
 const siteName = 'Invoice Client'
 const repoUrl = 'https://github.com/tomaj/invoice-client'
 
@@ -100,6 +102,7 @@ export function seoHead(page: PageData, srcDir: string, siteDescription: string)
   const url = pageUrl(page.relativePath)
   const locale = localeOf(page.relativePath)
   const sk = locale.prefix === 'sk/'
+  const image = sk ? ogImageSk : ogImage
   const isHome = page.frontmatter.layout === 'home'
   const homeTitle = sk ? 'Invoice Client – PHP klient pre API chcemfakturu.sk' : 'Invoice Client – PHP client for the chcemfakturu.sk API'
   const title = isHome ? homeTitle : `${page.title} | ${siteName}`
@@ -116,14 +119,14 @@ export function seoHead(page: PageData, srcDir: string, siteDescription: string)
     ['meta', { property: 'og:title', content: title }],
     ['meta', { property: 'og:description', content: description }],
     ['meta', { property: 'og:url', content: url }],
-    ['meta', { property: 'og:image', content: ogImage }],
+    ['meta', { property: 'og:image', content: image }],
     ['meta', { property: 'og:image:width', content: '1200' }],
     ['meta', { property: 'og:image:height', content: '630' }],
     ['meta', { property: 'og:image:alt', content: sk ? 'Invoice Client: faktúra s pečiatkou UHRADENÉ, odoslaná ako JSON do API chcemfakturu.sk' : 'Invoice Client: an invoice with a paid stamp, sent as JSON to the chcemfakturu.sk API' }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:title', content: title }],
     ['meta', { name: 'twitter:description', content: description }],
-    ['meta', { name: 'twitter:image', content: ogImage }],
+    ['meta', { name: 'twitter:image', content: image }],
     ['meta', { name: 'author', content: person.name }],
   ]
   if (isPreview) head.push(['meta', { name: 'robots', content: 'noindex, nofollow' }])
@@ -152,7 +155,7 @@ export function seoHead(page: PageData, srcDir: string, siteDescription: string)
       license: 'https://opensource.org/licenses/MIT',
       author: { '@id': person['@id'] },
       maintainer: { '@id': person['@id'] },
-      image: [{ '@id': `${siteUrl}#logo` }, ogImage],
+      image: [{ '@id': `${siteUrl}#logo` }, image],
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
     })
   } else {
@@ -164,7 +167,7 @@ export function seoHead(page: PageData, srcDir: string, siteDescription: string)
       url,
       mainEntityOfPage: url,
       inLanguage: locale.lang,
-      image: ogImage,
+      image,
       author: { '@id': person['@id'] },
       publisher: { '@id': person['@id'] },
       isPartOf: { '@id': `${siteUrl}#website` },

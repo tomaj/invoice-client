@@ -1,5 +1,5 @@
 // Builds the raster images of the site from the SVG sources in public/:
-//   og.png (1200 × 630 social card: logo, name, tagline and the hero illustration),
+//   og.png and og-sk.png (1200 × 630 social cards in English and Slovak: logo, name, tagline and the hero illustration),
 //   favicon-16.png, favicon-32.png, apple-touch-icon.png, icon-192.png, icon-512.png and favicon.ico.
 // Needs Chrome or Chromium: npm run images (CHROME_PATH=/path/to/chrome when it is not in the default place).
 import { readFileSync, writeFileSync } from 'node:fs'
@@ -14,21 +14,27 @@ const defaultChrome = process.platform === 'darwin'
 const browser = await puppeteer.launch({ executablePath: process.env.CHROME_PATH || defaultChrome, args: ['--no-sandbox'] })
 const page = await browser.newPage()
 
-// Social card
+// Social cards: og.png (English) and og-sk.png (Slovak, for the /sk/ pages)
 const logo = read('logo.svg').replace('<svg ', '<svg width="128" height="128" ')
-const hero = read('illustrations/hero-light.svg').replace(/width="480" height="420"/, 'width="528" height="462"')
+const cards = [
+  { file: 'og.png', suffix: '', tagline: 'Create, fetch and delete invoices through the chcemfakturu.sk API from PHP' },
+  { file: 'og-sk.png', suffix: '-sk', tagline: 'Vytvárajte, načítajte a mažte faktúry cez API chcemfakturu.sk z PHP' },
+]
 await page.setViewport({ width: 1200, height: 630 })
-await page.setContent(`<html><body style="margin:0;width:1200px;height:630px;background:linear-gradient(135deg,#ffffff 0%,#fff1f2 100%);font-family:Inter,Helvetica,Arial,sans-serif;display:flex;align-items:center;justify-content:space-between;padding:0 56px 0 72px;box-sizing:border-box">
+for (const card of cards) {
+  const hero = read(`illustrations/hero${card.suffix}-light.svg`).replace(/width="480" height="420"/, 'width="528" height="462"')
+  await page.setContent(`<html><body style="margin:0;width:1200px;height:630px;background:linear-gradient(135deg,#ffffff 0%,#fff1f2 100%);font-family:Inter,Helvetica,Arial,sans-serif;display:flex;align-items:center;justify-content:space-between;padding:0 56px 0 72px;box-sizing:border-box">
   <div style="max-width:560px">
     ${logo}
     <div style="font-size:76px;font-weight:800;color:#1e293b;line-height:1.05;margin-top:24px">Invoice Client</div>
-    <div style="font-size:30px;color:#475569;margin-top:18px;line-height:1.35">Create, fetch and delete invoices through the chcemfakturu.sk API from PHP</div>
+    <div style="font-size:30px;color:#475569;margin-top:18px;line-height:1.35">${card.tagline}</div>
     <div style="font-size:24px;color:#be123c;margin-top:28px;font-weight:700">composer require tomaj/invoice-client</div>
   </div>
   ${hero}
 </body></html>`)
-await page.screenshot({ path: pub('og.png').pathname })
-console.log('public/og.png written')
+  await page.screenshot({ path: pub(card.file).pathname })
+  console.log(`public/${card.file} written`)
+}
 
 // Icons: the logo on a transparent background
 const icon = read('logo.svg')
