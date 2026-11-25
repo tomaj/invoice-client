@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://tomaj.github.io/invoice-client/">
+  <a href="https://github.com/tomaj/invoice-client">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="docs/public/logo-dark.svg">
       <img src="docs/public/logo.svg" alt="Invoice Client" width="96" height="96">
@@ -9,18 +9,16 @@
 
 # Invoice Client
 
-**PHP client for the [chcemfakturu.sk](https://chcemfakturu.sk) invoicing API: create, fetch and delete invoices.**
+**PHP client for the chcemfakturu.sk invoicing API: create, fetch and delete invoices.**
 
-**Documentation: https://tomaj.github.io/invoice-client/**
-
-[Getting started](https://tomaj.github.io/invoice-client/guide/getting-started) · [Building invoices](https://tomaj.github.io/invoice-client/guide/invoices) · [Examples](https://tomaj.github.io/invoice-client/examples/) · [API reference](https://tomaj.github.io/invoice-client/api/reference) · [Changelog](https://tomaj.github.io/invoice-client/changelog)
+> [!WARNING]
+> **This repository is archived and no longer maintained.** The chcemfakturu.sk service it was written for has shut down (its domain no longer resolves), so the client has nothing to talk to. No version was ever released, and there will be no 1.0.0. The documentation sources stay in [`docs/`](docs/); the published site has been taken down.
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/tomaj/invoice-client.svg)](https://packagist.org/packages/tomaj/invoice-client)
 [![CI](https://github.com/tomaj/invoice-client/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/tomaj/invoice-client/actions/workflows/ci.yml?query=branch%3Amaster)
 [![Coverage Status](https://coveralls.io/repos/github/tomaj/invoice-client/badge.svg?branch=master)](https://coveralls.io/github/tomaj/invoice-client?branch=master)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%20max-brightgreen.svg)](https://phpstan.org/)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/tomaj/invoice-client/badge)](https://scorecard.dev/viewer/?uri=github.com/tomaj/invoice-client)
-[![Documentation](https://img.shields.io/badge/docs-1.x-e11d48.svg)](https://tomaj.github.io/invoice-client/)
 [![License](https://img.shields.io/packagist/l/tomaj/invoice-client.svg)](LICENSE.md)
 [![PHP Version](https://img.shields.io/badge/php-%5E8.4-777bb4.svg)](https://www.php.net/)
 
@@ -67,7 +65,7 @@ if ($response->isOk()) {
 }
 ```
 
-All invoice fields, `getInvoice()` / `deleteInvoice()`, error handling, logging, timeouts and testing are described in the **[documentation](https://tomaj.github.io/invoice-client/)**.
+All invoice fields, `getInvoice()` / `deleteInvoice()`, error handling, logging, timeouts and testing are described in the documentation sources in [`docs/`](docs/).
 
 ## Examples
 
